@@ -1,0 +1,11 @@
+﻿<UserControl x:Class="BlueFoxTests_Oracle.UserControls.TestsUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             FontFamily="../Resources/Decorations/Fonts/#Mark" FontWeight="Normal"
+             Height="Auto" Width="1000">
+    <WrapPanel x:Name="WrapPanel" HorizontalAlignment="Center">
+    </WrapPanel>
+</UserControl>

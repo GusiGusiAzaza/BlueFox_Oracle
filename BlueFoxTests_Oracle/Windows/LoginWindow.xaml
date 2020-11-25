@@ -1,0 +1,110 @@
+﻿<Window x:Class="BlueFoxTests_Oracle.Windows.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignLightForeground}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="20"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"  
+        FontFamily="../Resources/Decorations/Fonts/#Mark"
+        FontWeight="Normal"
+        Icon="../Resources/Icons/64x64Logo.png"
+        WindowStyle="None" WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
+        Title="Blue Fox" Height="550" Width="400">
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="34" />
+    </WindowChrome.WindowChrome>
+
+    <Window.CommandBindings>
+        <CommandBinding Command="{x:Static SystemCommands.CloseWindowCommand}" CanExecute="CommandBinding_CanExecute"
+                        Executed="CommandBinding_Executed_Close" />
+        <CommandBinding Command="{x:Static SystemCommands.MinimizeWindowCommand}"
+                        CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed_Minimize" />
+        <CommandBinding Command="{x:Static SystemCommands.RestoreWindowCommand}" CanExecute="CommandBinding_CanExecute"
+                        Executed="CommandBinding_Executed_Restore" />
+    </Window.CommandBindings>
+
+    <Border BorderBrush="DeepSkyBlue" BorderThickness="1 0 1 1">
+        <Grid Name="MainGrid">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40" />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <Grid.Background>
+                <LinearGradientBrush>
+                    <GradientStop Color="#A6E9FF" Offset="0" />
+                    <GradientStop Color="White" Offset="1" />
+                </LinearGradientBrush>
+            </Grid.Background>
+
+            <Grid Grid.Row="0" Grid.ColumnSpan="5" Height="30" Background="#5CD6FF" VerticalAlignment="Top">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <Image Source="../Resources/Icons/BlueFoxLogoNoLabel.png" Margin="2" HorizontalAlignment="Left"
+                           VerticalAlignment="Center" />
+                    <TextBlock Text="Blue fox tests" Margin="5 3 0 0" FontSize="15" />
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Style="{StaticResource MinimizeButtonStyle}" WindowChrome.IsHitTestVisibleInChrome="True"
+                            ToolTip="Minimize"
+                            Command="{x:Static SystemCommands.MinimizeWindowCommand}" />
+                    <Button Style="{StaticResource CloseButtonStyle}" WindowChrome.IsHitTestVisibleInChrome="True"
+                            ToolTip="Close"
+                            Command="{x:Static SystemCommands.CloseWindowCommand}" />
+                </StackPanel>
+            </Grid>
+
+            <Image Grid.Row="1" Grid.ColumnSpan="5" Grid.Column="0" Source="../Resources/Icons/BlueFoxLogo.png"
+                   Width="100" VerticalAlignment="Top" Margin="0 0 0 0" />
+
+            <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="5" Grid.RowSpan="4" Width="300">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="81*"/>
+                    <RowDefinition Height="82*"/>
+                    <RowDefinition Height="90*"/>
+                    <RowDefinition Height="73*"/>
+                    <RowDefinition Height="81*"/>
+                </Grid.RowDefinitions>
+
+                <Label Name="SignInLabel" Content="{DynamicResource login_SignInLabel}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                       FontSize="40" Foreground="{StaticResource MaterialDesignLightForeground}" FontWeight="Bold"></Label>
+                <TextBox Name="UsernameTextBox" Grid.Row="1" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="{DynamicResource login_UsernameHint}"
+                         VerticalAlignment="Center" Tag="Login" Height="52" Margin="0,15" MaxLength="25">
+                </TextBox>
+                <TextBlock Name="SignInInvalidUsernameWarning" Grid.Row="1" VerticalAlignment="Bottom" FontSize="14" Text="{DynamicResource signup_InvalidUsernameWarning}"
+                           Foreground="Red" FontWeight="Normal" Visibility="Collapsed" Margin="0,23,0,0"></TextBlock>
+                <PasswordBox Name="PasswordBox" Grid.Row="2" FontSize="20" Style="{DynamicResource MaterialDesignFloatingHintPasswordBox}"
+                             VerticalAlignment="Top" Height="44" Margin="0,10,0,0" MaxLength="25" materialDesign:HintAssist.Hint="{DynamicResource login_PasswordHint}">
+                </PasswordBox>
+                <Button Name="SignInButton" Grid.Row="3" Content="{DynamicResource login_SignInButton}" FontSize="25" VerticalAlignment="Top" HorizontalAlignment="Right" Height="40"
+                        Style="{StaticResource MaterialDesignOutlinedButton}" Background="Transparent" Click="SignInButton_Click"/>
+                <Button Name="CreateAccountButton" Grid.Row="4" Content="{DynamicResource login_CreateAccountButton}" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#505C60"
+                        Style="{StaticResource MaterialDesignFlatAccentButton}" Margin="-18 0" Click="CreateAccountButton_Click"/>
+                <Button Name="CantSignInButton" Grid.Row="4" Content="{DynamicResource login_CantSignInButton}" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="#505C60"
+                        Style="{StaticResource MaterialDesignFlatAccentButton}" Margin="-18 0" Click="CantSignInButton_Click"/>
+                <materialDesign:PackIcon Name="LoginWarningIcon" Grid.Row="1" VerticalAlignment="Top" Kind="ErrorOutline" Foreground="Red" Margin="-20 1" Visibility="Collapsed">
+                </materialDesign:PackIcon>
+                <TextBlock Name="LoginWarningLabel" Grid.Row="1" VerticalAlignment="Top" FontSize="15" Text="{DynamicResource login_WrongPasswordWarning}"
+                       Foreground="Red" FontWeight="SemiBold" Visibility="Collapsed" Margin="0,0,-45,0"></TextBlock>
+            </Grid>
+
+        </Grid>
+    </Border>
+</Window>
