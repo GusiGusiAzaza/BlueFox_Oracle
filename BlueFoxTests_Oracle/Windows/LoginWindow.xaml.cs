@@ -19,11 +19,12 @@ namespace BlueFoxTests_Oracle.Windows
     /// </summary>
     public partial class LoginWindow : Window
     {
-        [DllImport("Kernel32")]
-        public static extern void AllocConsole();
+        private readonly OracleConnection _conn;
         public LoginWindow()
         {
             InitializeComponent();
+            _conn = new OracleConnection(Config.ConnectionString);
+            _conn.OpenAsync();
             UsernameTextBox.LostKeyboardFocus += UsernameTextBox_LostKeyboardFocus;
         }
 
@@ -81,20 +82,18 @@ namespace BlueFoxTests_Oracle.Windows
 
             try
             {
-                AllocConsole();
-                using var conn = new OracleConnection(Config.ConnectionString);
                 User user = null;
                 bool isAdmin = false;
                 OracleCommand getUsersCmd = new OracleCommand
                 {
-                    Connection = conn,
+                    Connection = _conn,
                     CommandText = "GET_USERS",
                     CommandType = CommandType.StoredProcedure
                 };
 
-                OracleCommand userIsAdmin = new OracleCommand
+                OracleCommand userIsAdminCmd = new OracleCommand
                 {
-                    Connection = conn,
+                    Connection = _conn,
                     CommandText = "USER_IS_ADMIN",
                     CommandType = CommandType.StoredProcedure
                 };
@@ -104,7 +103,6 @@ namespace BlueFoxTests_Oracle.Windows
                     .ToBase64String(md5.ComputeHash(Encoding.UTF8.GetBytes(PasswordBox.Password)))
                     .Substring(0, 15);
 
-                conn.Open();
                 var reader = getUsersCmd.ExecuteReader();
                 DataTable dt = new DataTable();
                 dt.Load(reader);
@@ -118,10 +116,11 @@ namespace BlueFoxTests_Oracle.Windows
                             Username = row["username"].ToString(),
                             PasswordHash = row["password_hash"].ToString()
                         };
-                        userIsAdmin.Parameters.Add("return_value", OracleDbType.Decimal).Direction = ParameterDirection.ReturnValue;
-                        userIsAdmin.Parameters.Add("u_id", OracleDbType.Decimal).Value = user.UserId;
-                        userIsAdmin.ExecuteNonQuery();
-                        isAdmin = userIsAdmin.Parameters["return_value"].Value.ToString() == "1";
+                        userIsAdminCmd.Parameters.Add("return_value", OracleDbType.Decimal).Direction =
+                            ParameterDirection.ReturnValue;
+                        userIsAdminCmd.Parameters.Add("u_id", OracleDbType.Decimal).Value = user.UserId;
+                        userIsAdminCmd.ExecuteNonQuery();
+                        isAdmin = userIsAdminCmd.Parameters["return_value"].Value.ToString() == "1";
                         break;
                     }
                 }
@@ -139,13 +138,14 @@ namespace BlueFoxTests_Oracle.Windows
                 else
                 {
                     LoginWarningLabel.Foreground = new SolidColorBrush(Color.FromRgb(255, 0, 0));
-                    LoginWarningLabel.Text = (string)TryFindResource("login_WrongPasswordWarning");
+                    LoginWarningLabel.Text = (string) TryFindResource("login_WrongPasswordWarning");
                     LoginWarningLabel.Visibility = Visibility.Visible;
                     LoginWarningIcon.Visibility = Visibility.Visible;
                 }
             }
             catch (Exception exception)
             {
+                _conn.Close();
                 MessageBox.Show(exception.Message, "Error");
                 Logger.Log.Error(exception);
             }
