@@ -3,8 +3,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BlueFoxTests_Oracle.Models
 {
-    public partial class User
+    public class User
     {
+        public int UserId { get; set; }
+        //public string Usernamee { get; set; }
+        public string PasswordHash { get; set; }
+
+
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public User()
         {

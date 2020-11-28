@@ -27,6 +27,8 @@
                         CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed_Minimize" />
         <CommandBinding Command="{x:Static SystemCommands.RestoreWindowCommand}" CanExecute="CommandBinding_CanExecute"
                         Executed="CommandBinding_Executed_Restore" />
+        <CommandBinding Command="{x:Static EditingCommands.EnterParagraphBreak}" CanExecute="CommandBinding_CanExecute"
+                        Executed="SignInButton_Click" />
     </Window.CommandBindings>
 
     <Border BorderBrush="DeepSkyBlue" BorderThickness="1 0 1 1">

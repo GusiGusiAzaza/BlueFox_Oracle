@@ -23,7 +23,7 @@ namespace BlueFoxTests_Oracle.UserControls
         public TestsUserControl()
         {
             InitializeComponent();
-            _wrapPanel = System.Windows.Controls.WrapPanel;
+            _wrapPanel = WrapPanel;
         }
 
         public TestsUserControl(string themeName, MainWindow mainWindow)

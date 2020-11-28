@@ -52,7 +52,7 @@ namespace BlueFoxTests_Oracle.UserControls
                     webBrowser.Navigated += wbMain_Navigated;
                     border.Child = grid;
                     grid.Children.Add(webBrowser);
-                    System.Windows.Controls.WrapPanel.Children.Add(border);
+                    WrapPanel.Children.Add(border);
                 }
             }
             catch (Exception exception)

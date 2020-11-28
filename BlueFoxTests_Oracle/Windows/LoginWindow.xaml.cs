@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Data;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -8,6 +10,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using BlueFoxTests_Oracle.Components;
 using BlueFoxTests_Oracle.Models;
+using Oracle.ManagedDataAccess.Client;
 
 namespace BlueFoxTests_Oracle.Windows
 {
@@ -16,6 +19,8 @@ namespace BlueFoxTests_Oracle.Windows
     /// </summary>
     public partial class LoginWindow : Window
     {
+        [DllImport("Kernel32")]
+        public static extern void AllocConsole();
         public LoginWindow()
         {
             InitializeComponent();
@@ -76,21 +81,58 @@ namespace BlueFoxTests_Oracle.Windows
 
             try
             {
-                using var db = new BlueFoxContext();
+                AllocConsole();
+                using var conn = new OracleConnection(Config.ConnectionString);
+                User user = null;
+                bool isAdmin = false;
+                OracleCommand getUsersCmd = new OracleCommand
+                {
+                    Connection = conn,
+                    CommandText = "GET_USERS",
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                OracleCommand userIsAdmin = new OracleCommand
+                {
+                    Connection = conn,
+                    CommandText = "USER_IS_ADMIN",
+                    CommandType = CommandType.StoredProcedure
+                };
+
                 MD5 md5 = new MD5CryptoServiceProvider();
                 var hash = Convert
                     .ToBase64String(md5.ComputeHash(Encoding.UTF8.GetBytes(PasswordBox.Password)))
                     .Substring(0, 15);
-                var user = db.Users.FirstOrDefault(u =>
-                    u.Username == UsernameTextBox.Text && u.Password_Hash == hash);
+
+                conn.Open();
+                var reader = getUsersCmd.ExecuteReader();
+                DataTable dt = new DataTable();
+                dt.Load(reader);
+                foreach (DataRow row in dt.Rows)
+                {
+                    if (row["username"].ToString() == UsernameTextBox.Text && row["password_hash"].ToString() == hash)
+                    {
+                        user = new User
+                        {
+                            UserId = int.Parse(row["user_id"].ToString()),
+                            Username = row["username"].ToString(),
+                            PasswordHash = row["password_hash"].ToString()
+                        };
+                        userIsAdmin.Parameters.Add("return_value", OracleDbType.Decimal).Direction = ParameterDirection.ReturnValue;
+                        userIsAdmin.Parameters.Add("u_id", OracleDbType.Decimal).Value = user.UserId;
+                        userIsAdmin.ExecuteNonQuery();
+                        isAdmin = userIsAdmin.Parameters["return_value"].Value.ToString() == "1";
+                        break;
+                    }
+                }
+
                 if (user != null)
                 {
                     LoginWarningLabel.Visibility = Visibility.Collapsed;
                     LoginWarningIcon.Visibility = Visibility.Collapsed;
 
-                    var isAdmin = db.Admins.FirstOrDefault(admin => admin.User_Id == user.User_Id) != null;
                     var mainWindow = new MainWindow(user, isAdmin);
-                    Logger.Log.Info($"User \"{user.Username}\"(id: {user.User_Id}) successfully logged in");
+                    Logger.Log.Info($"User \"{user.Username}\"(id: {user.UserId}) successfully logged in");
                     mainWindow.Show();
                     Close();
                 }

@@ -201,7 +201,7 @@
                         </TabItem.Header>
                         <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
                                       CanContentScroll="False">
-                            <userControls:UserProfileUserControl />
+                            <userControls:UserProfile />
                         </ScrollViewer>
                     </TabItem>
                     <TabItem x:Name="AdminTabItem">

@@ -43,7 +43,7 @@ namespace BlueFoxTests_Oracle.UserControls
                         }
                     };
                     newSnack.Message.ActionClick += Snack_OnClick;
-                    System.Windows.Controls.WrapPanel.Children.Add(newSnack);
+                    WrapPanel.Children.Add(newSnack);
                 }
 
             }
