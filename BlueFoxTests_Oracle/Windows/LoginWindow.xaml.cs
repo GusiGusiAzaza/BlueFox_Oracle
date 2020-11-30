@@ -19,13 +19,11 @@ namespace BlueFoxTests_Oracle.Windows
     /// </summary>
     public partial class LoginWindow : Window
     {
-        private readonly OracleConnection _conn;
         public LoginWindow()
         {
             InitializeComponent();
-            _conn = new OracleConnection(Config.ConnectionString);
-            _conn.OpenAsync();
             UsernameTextBox.LostKeyboardFocus += UsernameTextBox_LostKeyboardFocus;
+            DB.Initialize();
         }
 
         private void CommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -77,56 +75,20 @@ namespace BlueFoxTests_Oracle.Windows
                 SignInInvalidUsernameWarning.Visibility = Visibility.Visible;
                 return;
             }
-
             SignInInvalidUsernameWarning.Visibility = Visibility.Collapsed;
 
             try
             {
-                User user = null;
-                bool isAdmin = false;
-                OracleCommand getUsersCmd = new OracleCommand
-                {
-                    Connection = _conn,
-                    CommandText = "GET_USERS",
-                    CommandType = CommandType.StoredProcedure
-                };
-
-                OracleCommand userIsAdminCmd = new OracleCommand
-                {
-                    Connection = _conn,
-                    CommandText = "USER_IS_ADMIN",
-                    CommandType = CommandType.StoredProcedure
-                };
-
                 MD5 md5 = new MD5CryptoServiceProvider();
                 var hash = Convert
                     .ToBase64String(md5.ComputeHash(Encoding.UTF8.GetBytes(PasswordBox.Password)))
                     .Substring(0, 15);
 
-                var reader = getUsersCmd.ExecuteReader();
-                DataTable dt = new DataTable();
-                dt.Load(reader);
-                foreach (DataRow row in dt.Rows)
-                {
-                    if (row["username"].ToString() == UsernameTextBox.Text && row["password_hash"].ToString() == hash)
-                    {
-                        user = new User
-                        {
-                            UserId = int.Parse(row["user_id"].ToString()),
-                            Username = row["username"].ToString(),
-                            PasswordHash = row["password_hash"].ToString()
-                        };
-                        userIsAdminCmd.Parameters.Add("return_value", OracleDbType.Decimal).Direction =
-                            ParameterDirection.ReturnValue;
-                        userIsAdminCmd.Parameters.Add("u_id", OracleDbType.Decimal).Value = user.UserId;
-                        userIsAdminCmd.ExecuteNonQuery();
-                        isAdmin = userIsAdminCmd.Parameters["return_value"].Value.ToString() == "1";
-                        break;
-                    }
-                }
+                User user = DB.GetUserByUsername(UsernameTextBox.Text);
 
-                if (user != null)
+                if (user != null && user.PasswordHash == hash)
                 {
+                    var isAdmin = DB.IsAdmin(user.UserId);
                     LoginWarningLabel.Visibility = Visibility.Collapsed;
                     LoginWarningIcon.Visibility = Visibility.Collapsed;
 
@@ -138,14 +100,14 @@ namespace BlueFoxTests_Oracle.Windows
                 else
                 {
                     LoginWarningLabel.Foreground = new SolidColorBrush(Color.FromRgb(255, 0, 0));
-                    LoginWarningLabel.Text = (string) TryFindResource("login_WrongPasswordWarning");
+                    LoginWarningLabel.Text = (string)TryFindResource("login_WrongPasswordWarning");
                     LoginWarningLabel.Visibility = Visibility.Visible;
                     LoginWarningIcon.Visibility = Visibility.Visible;
                 }
             }
             catch (Exception exception)
             {
-                _conn.Close();
+                DB.Conn.Close();
                 MessageBox.Show(exception.Message, "Error");
                 Logger.Log.Error(exception);
             }

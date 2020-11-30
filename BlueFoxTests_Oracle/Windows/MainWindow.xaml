@@ -93,7 +93,7 @@
                              Grid.ColumnSpan="4">
                 <dragablz:TabablzControl x:Name="MainTabControl"
                                          Style="{DynamicResource MaterialDesignTabablzControlStyle}">
-                    <TabItem>
+                    <!--<TabItem>
                         <TabItem.Header>
                             <TextBlock Text="HOME" FontWeight="Medium" HorizontalAlignment="Stretch"
                                        TextAlignment="Center"
@@ -103,7 +103,7 @@
                                       CanContentScroll="False">
                             <userControls:HomeUserControl />
                         </ScrollViewer>
-                    </TabItem>
+                    </TabItem>-->
                     <TabItem>
                         <TabItem.Header>
                             <TextBlock Text="TESTS" FontWeight="Medium" HorizontalAlignment="Stretch"

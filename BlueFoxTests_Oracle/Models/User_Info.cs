@@ -4,8 +4,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BlueFoxTests_Oracle.Models
 {
-    public partial class User_Info
+    public class User_Info
     {
+        public int UserId { get; set; }
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int User_Id { get; set; }
@@ -19,7 +21,7 @@ namespace BlueFoxTests_Oracle.Models
         [StringLength(50)]
         public string Location { get; set; }
 
-        public DateTime? Birthday { get; set; }
+        public string Birthday { get; set; }
 
         [StringLength(100)]
         public string Summary { get; set; }

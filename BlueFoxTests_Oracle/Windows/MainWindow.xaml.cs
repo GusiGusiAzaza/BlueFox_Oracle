@@ -17,15 +17,20 @@ namespace BlueFoxTests_Oracle.Windows
     public partial class MainWindow : MetroWindow
     {
         public static User User;
-        private static Random rand;
+        private static Random _rand;
         public static bool IsAdmin;
+
+        public MainWindow()
+        {
+            InitializeComponent();
+            ThemesTab.Children.Add(new UserControls.ThemesUserControl(this));
+        }
 
         public MainWindow(User user, bool isAdmin)
         {
-
             User = user;
             IsAdmin = isAdmin;
-            rand = new Random();
+            _rand = new Random();
             InitializeComponent();
 
             if (!isAdmin)
@@ -267,7 +272,7 @@ namespace BlueFoxTests_Oracle.Windows
             while (n > 1)
             {
                 n--;
-                var k = rand.Next(n + 1);
+                var k = _rand.Next(n + 1);
                 var value = list[k];
                 list[k] = list[n];
                 list[n] = value;

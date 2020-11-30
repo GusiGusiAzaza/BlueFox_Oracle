@@ -18,12 +18,9 @@ namespace BlueFoxTests_Oracle.Windows
     /// </summary>
     public partial class SignUpWindow : Window
     {
-        private readonly OracleConnection _conn;
         public SignUpWindow()
         {
             InitializeComponent();
-            _conn = new OracleConnection(Config.ConnectionString);
-            _conn.OpenAsync();
             UsernameTextBox.LostKeyboardFocus += UsernameTextBox_LostKeyboardFocus;
             PasswordBox.LostKeyboardFocus += PasswordBox_LostKeyboardFocus;
             ConfirmPasswordBox.LostKeyboardFocus += ConfirmPasswordBox_LostKeyboardFocus;
@@ -56,7 +53,7 @@ namespace BlueFoxTests_Oracle.Windows
             Close();
         }
 
-        private async void UsernameTextBox_LostKeyboardFocus(object sender, RoutedEventArgs e)
+        private void UsernameTextBox_LostKeyboardFocus(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -67,22 +64,7 @@ namespace BlueFoxTests_Oracle.Windows
                     return;
                 }
 
-                bool userExists = false;
-                OracleCommand findUserCmd = new OracleCommand
-                {
-                    Connection = _conn,
-                    CommandText = "FIND_USER",
-                    CommandType = CommandType.StoredProcedure
-                };
-                findUserCmd.Parameters.Add("usrname", OracleDbType.NVarchar2).Value = UsernameTextBox.Text;
-
-                var reader = await findUserCmd.ExecuteReaderAsync();
-                while (await reader.ReadAsync())
-                {
-                    if (string.Equals(UsernameTextBox.Text, reader["username"].ToString(), StringComparison.CurrentCultureIgnoreCase)) userExists = true;
-                }
-
-                if (userExists)
+                if (DB.UserExistsByUsername(UsernameTextBox.Text))
                 {
                     SignUpUserNameWarningTextBlock.Text = (string)TryFindResource("signup_UserExistsWarning");
                     SignUpUserNameWarningTextBlock.Visibility = Visibility.Visible;
@@ -96,7 +78,7 @@ namespace BlueFoxTests_Oracle.Windows
             }
             catch (Exception exception)
             {
-                _conn.Close();
+                DB.Conn.Close();
                 MessageBox.Show(exception.Message, "Error");
                 Logger.Log.Error(exception);
             }
@@ -140,15 +122,8 @@ namespace BlueFoxTests_Oracle.Windows
                         .Substring(0, 15)
                 };
 
-                OracleCommand addUserCmd = new OracleCommand
-                {
-                    Connection = conn,
-                    CommandText = "ADD_USER",
-                    CommandType = CommandType.StoredProcedure,
-                };
-                addUserCmd.Parameters.Add("username", OracleDbType.NVarchar2).Value = newUser.Username;
-                addUserCmd.Parameters.Add("password_hash", OracleDbType.NVarchar2).Value = newUser.PasswordHash;
-                addUserCmd.ExecuteNonQuery();
+                DB.AddUser(newUser);
+                DB.InitUserInfo(DB.GetUserByUsername(UsernameTextBox.Text).UserId);
 
                 Logger.Log.Info($"Successfully registered new user \"{newUser.Username}\"(id: {newUser.User_Id}) to database");
 
@@ -166,12 +141,9 @@ namespace BlueFoxTests_Oracle.Windows
             }
             catch (Exception exception)
             {
+                DB.Conn.Close();
                 MessageBox.Show(exception.Message, "Error");
                 Logger.Log.Error(exception);
-            }
-            finally
-            {
-                _conn.Close();
             }
         }
     }

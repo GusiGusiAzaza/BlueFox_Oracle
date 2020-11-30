@@ -111,6 +111,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Components\Config.cs" />
+    <Compile Include="Components\DB.cs" />
     <Compile Include="Models\Admin.cs" />
     <Compile Include="Models\Answers_For_Tests.cs" />
     <Compile Include="Models\BlueFoxContext.cs" />
@@ -124,9 +125,6 @@
     <Compile Include="Models\User_Stats.cs" />
     <Compile Include="UserControls\AdminCreateTestControl.xaml.cs">
       <DependentUpon>AdminCreateTestControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\EditUsersInfoUserControl.xaml.cs">
-      <DependentUpon>EditUsersInfoUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\HomeUserControl.xaml.cs">
       <DependentUpon>HomeUserControl.xaml</DependentUpon>
@@ -190,10 +188,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\AdminCreateTestControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UserControls\EditUsersInfoUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
