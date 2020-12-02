@@ -15,7 +15,7 @@ namespace BlueFoxTests_Oracle.Models
         public User()
         {
             Admins = new HashSet<Admin>();
-            Test_Progress = new HashSet<Test_Progress>();
+            Test_Progress = new HashSet<Test_Result>();
         }
 
         [Key]
@@ -33,7 +33,7 @@ namespace BlueFoxTests_Oracle.Models
         public virtual ICollection<Admin> Admins { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Test_Progress> Test_Progress { get; set; }
+        public virtual ICollection<Test_Result> Test_Progress { get; set; }
 
         public virtual User_Info User_Info { get; set; }
 

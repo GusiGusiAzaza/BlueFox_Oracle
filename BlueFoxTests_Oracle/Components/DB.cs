@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO.Packaging;
+using System.Windows.Documents;
 using BlueFoxTests_Oracle.Models;
 using Oracle.ManagedDataAccess.Client;
 
@@ -181,6 +183,93 @@ namespace BlueFoxTests_Oracle.Components
             updateUserInfoCmd.Parameters.Add("u_education", OracleDbType.NVarchar2).Value = userInfo.Education;
             updateUserInfoCmd.Parameters.Add("u_work", OracleDbType.NVarchar2).Value = userInfo.Work;
             await updateUserInfoCmd.ExecuteNonQueryAsync();
+        }
+
+        public static List<Theme> GetThemes()
+        {
+            List<Theme> themes = new List<Theme>();
+            var getThemesCmd = new OracleCommand
+            {
+                Connection = Conn,
+                CommandText = "GET_THEMES",
+                CommandType = CommandType.StoredProcedure
+            };
+            var reader = getThemesCmd.ExecuteReader();
+            while (reader.Read())
+            {
+                themes.Add(new Theme
+                {
+                    Theme_Id = int.Parse(reader["theme_id"].ToString()),
+                    Theme_Name = reader["theme_name"].ToString()
+                });
+            }
+
+            return themes;
+        }
+
+        public static async void AddTheme(Theme newTheme)
+        {
+            var addUserCmd = new OracleCommand
+            {
+                Connection = Conn,
+                CommandText = "ADD_THEME",
+                CommandType = CommandType.StoredProcedure
+            };
+            addUserCmd.Parameters.Add("th_name", OracleDbType.NVarchar2).Value = newTheme.Theme_Name;
+            await addUserCmd.ExecuteNonQueryAsync();
+        }
+
+        public static List<Test> GetTestsByThemeId(int theme_id)
+        {
+            List<Test> tests = new List<Test>();
+            var getUserByUsernameCmd = new OracleCommand
+            {
+                Connection = Conn,
+                CommandText = "GET_TESTS_BY_THEME_ID",
+                CommandType = CommandType.StoredProcedure
+            };
+            getUserByUsernameCmd.Parameters.Add("th_id", OracleDbType.Decimal).Value = theme_id;
+            var reader = getUserByUsernameCmd.ExecuteReader();
+            while (reader.Read())
+            {
+                tests.Add(new Test
+                {
+                    Test_Id = int.Parse(reader["test_id"].ToString()),
+                    Admin_Id = int.Parse(reader["admin_id"].ToString()),
+                    Test_Name = reader["test_name"].ToString(),
+                    Theme_Id = int.Parse(reader["theme_id"].ToString()),
+                    Time_Limit_In_Minutes = int.Parse(reader["time_limit_in_minutes"].ToString()),
+                    Passing_Score = int.Parse(reader["passing_score"].ToString())
+                });
+            }
+
+            return tests;
+        }
+
+
+        public static List<Questions_For_Tests> GetQuestionsByTestId(int test_id)
+        {
+            List<Questions_For_Tests> questions = new List<Questions_For_Tests>();
+            var getUserByUsernameCmd = new OracleCommand
+            {
+                Connection = Conn,
+                CommandText = "GET_QUESTIONS_BY_TEST_ID",
+                CommandType = CommandType.StoredProcedure
+            };
+            getUserByUsernameCmd.Parameters.Add("t_id", OracleDbType.Decimal).Value = test_id;
+            var reader = getUserByUsernameCmd.ExecuteReader();
+            while (reader.Read())
+            {
+                questions.Add(new Questions_For_Tests()
+                {
+                    Question_Id = int.Parse(reader["question_id"].ToString()),
+                    Test_Id = int.Parse(reader["test_id"].ToString()),
+                    Question_Number = int.Parse(reader["question_number"].ToString()),
+                    Question = reader["question"].ToString()
+                });
+            }
+
+            return questions;
         }
     }
 }

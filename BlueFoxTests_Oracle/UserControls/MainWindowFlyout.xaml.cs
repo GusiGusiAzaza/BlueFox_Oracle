@@ -18,7 +18,6 @@ namespace BlueFoxTests_Oracle.UserControls
         {
             LoginWindow loginWindow = new LoginWindow();
             loginWindow.Show();
-
         }
     }
 }

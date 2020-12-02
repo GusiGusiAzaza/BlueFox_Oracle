@@ -19,7 +19,7 @@
                       TextElement.FontSize="18"
                       TextOptions.TextFormattingMode="Ideal" TextOptions.TextRenderingMode="Auto"
                       FontFamily="../../Resources/Decorations/Fonts/#Mark" FontWeight="Normal" BorderBrush="DeepSkyBlue"
-                      Icon="../../Resources/Icons/64x64Logo.png"
+                      Icon="./../Resources/Icons/64x64Logo.png"
                       WindowStartupLocation="CenterScreen" UseNoneWindowStyle="True"
                       Title="Blue Fox" Width="1600" Height="900" MinWidth="1200" MinHeight="700">
 

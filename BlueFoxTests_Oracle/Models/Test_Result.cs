@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BlueFoxTests_Oracle.Models
 {
-    public partial class Test_Progress
+    public partial class Test_Result
     {
         [Key]
         public int Progress_Id { get; set; }

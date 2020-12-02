@@ -16,13 +16,17 @@ namespace BlueFoxTests_Oracle.Windows
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
-        public static User User;
-        private static Random _rand;
+        public static User User = DB.GetUserByUsername("God");
+        private static Random _rand = new Random();
         public static bool IsAdmin;
 
         public MainWindow()
         {
             InitializeComponent();
+            DB.Initialize();
+            User = DB.GetUserByUsername("God");
+            _rand = new Random();
+
             ThemesTab.Children.Add(new UserControls.ThemesUserControl(this));
         }
 
@@ -90,7 +94,6 @@ namespace BlueFoxTests_Oracle.Windows
         }
 
 
-
         public Questions_For_Tests _currentQuestion;
 
         public Test _currentTest = new Test();
@@ -98,7 +101,7 @@ namespace BlueFoxTests_Oracle.Windows
         public int _questionsCount;
         public ICollection<Questions_For_Tests> _questionsInTest;
         public string _rightAnswerString;
-        public Test_Progress _testProgress;
+        public Test_Result _testProgress;
 
         public void LoadTestData(Test test)
         {
@@ -107,7 +110,7 @@ namespace BlueFoxTests_Oracle.Windows
             _questionsCount = _currentTest.Questions_For_Tests.Count;
             _questionsInTest = _currentTest.Questions_For_Tests;
 
-            _testProgress = new Test_Progress
+            _testProgress = new Test_Result
             {
                 User_Id = User.User_Id,
                 Test_Id = _currentTest.Test_Id,

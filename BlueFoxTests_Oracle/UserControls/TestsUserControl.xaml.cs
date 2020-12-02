@@ -16,7 +16,7 @@ namespace BlueFoxTests_Oracle.UserControls
     {
         private MainWindow _mainWindow;
         private static WrapPanel _wrapPanel;
-        private Themes_For_Tests currentTheme;
+        private Models.Theme currentTheme;
         public static bool _testIsGoing = false;
 
 

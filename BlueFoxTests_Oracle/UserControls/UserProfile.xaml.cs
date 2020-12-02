@@ -39,18 +39,8 @@ namespace BlueFoxTests_Oracle.UserControls
                     Work = Work.Text
                 };
                 DB.UpdateUserInfo(userInfo);
-                //using BlueFoxContext db = new BlueFoxContext();
-                //var user = db.Users.FirstOrDefault(u => u.User_Id == MainWindow.User.User_Id);
-
-                //if (user != null && user.User_Info.Name != Namee.Text) user.User_Info.Name = Namee.Text;
-                //if (user != null && user.User_Info.Gender != Gender.Text) user.User_Info.Gender = Gender.Text;
-                //if (user != null && user.User_Info.Location != Location.Text) user.User_Info.Location = Location.Text;
-                ////if (user != null && user.User_Info.Birthday != Birthday.SelectedDate) user.User_Info.Birthday = Birthday.SelectedDate;
-                //if (user != null && user.User_Info.Summary != Summary.Text) user.User_Info.Summary = Summary.Text;
-                //if (user != null && user.User_Info.Education != Education.Text) user.User_Info.Education = Education.Text;
-                //if (user != null && user.User_Info.Work != Work.Text) user.User_Info.Work = Work.Text;
-                //db.SaveChanges();
-                MessageBox.Show("Information successfully changed", "Info");
+                MainGrid.IsEnabled = false;
+                DialogHost.IsOpen = true;
             }
             catch (Exception exception)
             {
@@ -80,6 +70,11 @@ namespace BlueFoxTests_Oracle.UserControls
                 MessageBox.Show(exception.Message, "Error");
                 Logger.Log.Error(exception);
             }
+        }
+
+        private void EnableGrid(object sender, RoutedEventArgs e)
+        {
+            MainGrid.IsEnabled = true;
         }
     }
 }

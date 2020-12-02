@@ -15,10 +15,10 @@ namespace BlueFoxTests_Oracle.UserControls
     /// </summary>
     public partial class TestResults : UserControl
     {
-        private Test_Progress _results;
+        private Test_Result _results;
         private readonly Test _test;
 
-        public TestResults(Test_Progress results, Test test)
+        public TestResults(Test_Result results, Test test)
         {
             InitializeComponent();
             _results = results;

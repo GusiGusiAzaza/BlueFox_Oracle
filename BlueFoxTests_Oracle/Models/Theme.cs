@@ -3,10 +3,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BlueFoxTests_Oracle.Models
 {
-    public partial class Themes_For_Tests
+    public partial class Theme
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Themes_For_Tests()
+        public Theme()
         {
             Tests = new HashSet<Test>();
         }
