@@ -6,7 +6,7 @@
                       xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
                       xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
                       xmlns:dockablz="clr-namespace:Dragablz.Dockablz;assembly=Dragablz"
-                      xmlns:wpf="http://materialdesigninxaml.net/winfx/xaml/themes"
+                      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                       mc:Ignorable="d"
                       xmlns:userControls="clr-namespace:BlueFoxTests_Oracle.UserControls"
                       xmlns:vMs="clr-namespace:BlueFoxTests_Oracle.VMs"
@@ -36,7 +36,7 @@
                         CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed_Minimize" />
     </Window.CommandBindings>
 
-    <Grid>
+    <Grid Name="MainGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="30" />
             <RowDefinition />
@@ -52,7 +52,18 @@
             <ColumnDefinition />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-
+        <materialDesign:DialogHost x:Name="DialogHost" Grid.Row="0" Grid.Column="0" Grid.RowSpan="6" Grid.ColumnSpan="5" CloseOnClickAway="False" DialogTheme="Inherit" >
+            <materialDesign:DialogHost.DialogContent>
+                <StackPanel>
+                    <TextBlock FontSize="20" Margin="20 10" Name="DialogTxt">
+                        Information successfully changed
+                    </TextBlock>
+                    <Button Style="{StaticResource MaterialDesignFlatButton}" IsCancel="True"
+                            Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                            HorizontalAlignment="Center" Margin="10 10" Click="EnableGrid">OK</Button>
+                </StackPanel>
+            </materialDesign:DialogHost.DialogContent>
+        </materialDesign:DialogHost>
         <Border Grid.Row="0" Grid.ColumnSpan="5" BorderThickness="0 0 0 1" BorderBrush="#00A8E0">
             <!--Custom Window-->
             <Grid Height="30" Background="DeepSkyBlue">
@@ -138,8 +149,8 @@
                                             <TextBlock x:Name="TestName" Text="##Test Name##" Foreground="White"
                                                    Height="50" VerticalAlignment="Center"
                                                    Background="#7A7A7A" FontSize="30" Margin="1" Padding="20 4" />
-                                            <wpf:PackIcon x:Name="AnswerCorrectIcon" Foreground="Transparent" Kind="Adjust" Grid.Row="0" Width="25" Height="25" HorizontalAlignment="Right" VerticalAlignment="Center"
-                                                      Margin="20 0"></wpf:PackIcon>
+                                            <materialDesign:PackIcon x:Name="AnswerCorrectIcon" Foreground="Transparent" Kind="Adjust" Grid.Row="0" Width="25" Height="25" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                                      Margin="20 0"></materialDesign:PackIcon>
                                             <Border x:Name="QuestionAreaPanel" Grid.Row="1" CornerRadius="20" Margin="10 0">
                                                 <Border.Background>
                                                     <SolidColorBrush Opacity="0.3" />
@@ -221,7 +232,7 @@
 
                             <TabItem Header="New Home Page" >
                                 <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Margin="30" Width="1000">
-                                    <TextBox x:Name="url" Style="{DynamicResource MaterialDesignFloatingHintTextBox}" wpf:HintAssist.Hint="Site URL" FontSize="25"></TextBox>
+                                    <TextBox x:Name="url" Style="{DynamicResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Site URL" FontSize="25"></TextBox>
                                     <Button Style="{DynamicResource MaterialDesignFlatMidBgButton}" Height="50" Content="Add Site" HorizontalAlignment="Right" 
                                             Click="AddUri_Click"></Button>
                                 </Grid>
@@ -233,16 +244,19 @@
             </dockablz:Layout>
         </Grid>
 
+        <materialDesign:Snackbar MessageQueue="{materialDesign:MessageQueue}" x:Name="MainSnackbar"
+                      Grid.Row="5" Grid.Column="0" VerticalAlignment="Bottom" Margin="0 0 10 0"/>
+
         <Button x:Name="SettingsButton" Grid.Row="5" Grid.Column="4" Width="40" Height="40"
                 Style="{StaticResource MaterialDesignFloatingActionDarkButton}" Background="Transparent"
                 HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="5 5" BorderBrush="Transparent"
                 Panel.ZIndex="50" Click="SettingsButton_Click">
-            <wpf:PackIcon Kind="CogOutline" Height="24" Width="24" Foreground="{DynamicResource MaterialDesignBody}" />
+            <materialDesign:PackIcon Kind="CogOutline" Height="24" Width="24" Foreground="{DynamicResource MaterialDesignBody}" />
         </Button>
         <!--Bottom Settings Icon Button-->
 
         <controls:Flyout x:Name="LeftFlyout" Position="Right" Header="Settings"
-                         wpf:FlyoutAssist.HeaderColorMode="PrimaryDark" Panel.ZIndex="100"
+                         materialDesign:FlyoutAssist.HeaderColorMode="PrimaryDark" Panel.ZIndex="100"
                          Grid.Row="1" Grid.Column="4" Grid.RowSpan="5">
             <Grid Margin="24">
                 <userControls:MainWindowFlyout HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0 60">

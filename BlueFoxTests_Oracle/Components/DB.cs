@@ -68,7 +68,7 @@ namespace BlueFoxTests_Oracle.Components
             return user;
         }
 
-        public static bool IsAdmin(int id)
+        public static int IsAdmin(int id)
         {
             var userIsAdminCmd = new OracleCommand
             {
@@ -80,7 +80,7 @@ namespace BlueFoxTests_Oracle.Components
                 ParameterDirection.ReturnValue;
             userIsAdminCmd.Parameters.Add("u_id", OracleDbType.Decimal).Value = id;
             userIsAdminCmd.ExecuteNonQuery();
-            return userIsAdminCmd.Parameters["return_value"].Value.ToString() == "1";
+            return int.Parse(userIsAdminCmd.Parameters["return_value"].Value.ToString());
         }
 
         public static bool UserExists(int id)
@@ -209,27 +209,27 @@ namespace BlueFoxTests_Oracle.Components
 
         public static async void AddTheme(Theme newTheme)
         {
-            var addUserCmd = new OracleCommand
+            var addThemeCmd = new OracleCommand
             {
                 Connection = Conn,
                 CommandText = "ADD_THEME",
                 CommandType = CommandType.StoredProcedure
             };
-            addUserCmd.Parameters.Add("th_name", OracleDbType.NVarchar2).Value = newTheme.Theme_Name;
-            await addUserCmd.ExecuteNonQueryAsync();
+            addThemeCmd.Parameters.Add("th_name", OracleDbType.NVarchar2).Value = newTheme.Theme_Name;
+            await addThemeCmd.ExecuteNonQueryAsync();
         }
 
         public static List<Test> GetTestsByThemeId(int theme_id)
         {
             List<Test> tests = new List<Test>();
-            var getUserByUsernameCmd = new OracleCommand
+            var getTestsByThemeIdCmd = new OracleCommand
             {
                 Connection = Conn,
                 CommandText = "GET_TESTS_BY_THEME_ID",
                 CommandType = CommandType.StoredProcedure
             };
-            getUserByUsernameCmd.Parameters.Add("th_id", OracleDbType.Decimal).Value = theme_id;
-            var reader = getUserByUsernameCmd.ExecuteReader();
+            getTestsByThemeIdCmd.Parameters.Add("th_id", OracleDbType.Decimal).Value = theme_id;
+            var reader = getTestsByThemeIdCmd.ExecuteReader();
             while (reader.Read())
             {
                 tests.Add(new Test
@@ -250,14 +250,14 @@ namespace BlueFoxTests_Oracle.Components
         public static List<Questions_For_Tests> GetQuestionsByTestId(int test_id)
         {
             List<Questions_For_Tests> questions = new List<Questions_For_Tests>();
-            var getUserByUsernameCmd = new OracleCommand
+            var getQsByTestIdCmd = new OracleCommand
             {
                 Connection = Conn,
                 CommandText = "GET_QUESTIONS_BY_TEST_ID",
                 CommandType = CommandType.StoredProcedure
             };
-            getUserByUsernameCmd.Parameters.Add("t_id", OracleDbType.Decimal).Value = test_id;
-            var reader = getUserByUsernameCmd.ExecuteReader();
+            getQsByTestIdCmd.Parameters.Add("t_id", OracleDbType.Decimal).Value = test_id;
+            var reader = getQsByTestIdCmd.ExecuteReader();
             while (reader.Read())
             {
                 questions.Add(new Questions_For_Tests()
@@ -270,6 +270,75 @@ namespace BlueFoxTests_Oracle.Components
             }
 
             return questions;
+        }
+
+        public static List<Answers_For_Tests> GetAnswersByQuestionId(int question_id)
+        {
+            List<Answers_For_Tests> answers = new List<Answers_For_Tests>();
+            var getAnswersByQidCmd = new OracleCommand
+            {
+                Connection = Conn,
+                CommandText = "GET_ANSWERS_BY_QUESTION_ID",
+                CommandType = CommandType.StoredProcedure
+            };
+            getAnswersByQidCmd.Parameters.Add("q_id", OracleDbType.Decimal).Value = question_id;
+            var reader = getAnswersByQidCmd.ExecuteReader();
+            while (reader.Read())
+            {
+                answers.Add(new Answers_For_Tests()
+                {
+                    Answer_Id = int.Parse(reader["answer_id"].ToString()),
+                    Question_Id = int.Parse(reader["question_id"].ToString()),
+                    Is_Right = int.Parse(reader["is_right"].ToString()) == 1,
+                    Answer = reader["answer"].ToString()
+                });
+            }
+
+            return answers;
+        }
+
+        public static async void AddTest(Test newTest)
+        {
+            var addTestCmd = new OracleCommand
+            {
+                Connection = Conn,
+                CommandText = "ADD_TEST",
+                CommandType = CommandType.StoredProcedure
+            };
+            addTestCmd.Parameters.Add("a_id", OracleDbType.Decimal).Value = newTest.Admin_Id;
+            addTestCmd.Parameters.Add("t_name", OracleDbType.NVarchar2).Value = newTest.Test_Name;
+            addTestCmd.Parameters.Add("th_id", OracleDbType.Decimal).Value = newTest.Theme_Id;
+            addTestCmd.Parameters.Add("time_limit", OracleDbType.Decimal).Value = newTest.Time_Limit_In_Minutes;
+            addTestCmd.Parameters.Add("pass_score", OracleDbType.Decimal).Value = newTest.Passing_Score;
+            await addTestCmd.ExecuteNonQueryAsync();
+        }
+
+        public static async void AddQuestion(Questions_For_Tests newQuestion)
+        {
+            var addQuestionCmd = new OracleCommand
+            {
+                Connection = Conn,
+                CommandText = "ADD_QUESTION",
+                CommandType = CommandType.StoredProcedure
+            };
+            addQuestionCmd.Parameters.Add("t_id", OracleDbType.Decimal).Value = newQuestion.Test_Id;
+            addQuestionCmd.Parameters.Add("q_number", OracleDbType.Decimal).Value = newQuestion.Question_Number;
+            addQuestionCmd.Parameters.Add("qn", OracleDbType.NVarchar2).Value = newQuestion.Question;
+            await addQuestionCmd.ExecuteNonQueryAsync();
+        }
+
+        public static async void AddAnswer(Answers_For_Tests newAnswer)
+        {
+            var addAnswerCmd = new OracleCommand
+            {
+                Connection = Conn,
+                CommandText = "ADD_ANSWER",
+                CommandType = CommandType.StoredProcedure
+            };
+            addAnswerCmd.Parameters.Add("answ", OracleDbType.Decimal).Value = newAnswer.Answer;
+            addAnswerCmd.Parameters.Add("is_r", OracleDbType.Decimal).Value = newAnswer.Is_Right ? 1 : 0;
+            addAnswerCmd.Parameters.Add("q_id", OracleDbType.NVarchar2).Value = newAnswer.Question_Id;
+            await addAnswerCmd.ExecuteNonQueryAsync();
         }
     }
 }

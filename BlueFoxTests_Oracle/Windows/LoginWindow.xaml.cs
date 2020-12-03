@@ -116,6 +116,22 @@ namespace BlueFoxTests_Oracle.Windows
 
         private void CantSignInButton_Click(object sender, RoutedEventArgs e)
         {
+            MD5 md5 = new MD5CryptoServiceProvider();
+            string name;
+            string password;
+            for (int i = 1; i < 101000; i++)
+            {
+                name = $"User{i}";
+                password = $"User{i}";
+                var hash = Convert
+                    .ToBase64String(md5.ComputeHash(Encoding.UTF8.GetBytes(password)))
+                    .Substring(0, 15);
+                DB.AddUser(new User
+                {
+                    Username = name,
+                    PasswordHash = hash
+                });
+            }
             LoginWarningLabel.Foreground = new SolidColorBrush(Color.FromRgb(255, 0, 0));
             LoginWarningLabel.Text = (string)TryFindResource("login_ForgotPasswordWarning");
             LoginWarningLabel.Visibility = Visibility.Visible;

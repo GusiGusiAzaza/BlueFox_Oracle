@@ -25,10 +25,10 @@
             </Grid.ColumnDefinitions>
 
             <materialDesign:DialogHost Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" x:Name="DialogHost" CloseOnClickAway="False"
-                            DialogTheme="Inherit" OverlayBackground="Gray" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 100 0 0">
+                            DialogTheme="Inherit" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 300 0 0">
                 <materialDesign:DialogHost.DialogContent>
-                    <StackPanel Width="300">
-                        <TextBlock FontSize="20" Margin="20 10" Name="DialogText">
+                    <StackPanel Width="350">
+                        <TextBlock TextWrapping="WrapWithOverflow" FontSize="20" Margin="20 10" Name="DialogText" TextAlignment="Center">
                             <TextBlock.Text>ALERT</TextBlock.Text>
                         </TextBlock>
                         <Button Style="{StaticResource MaterialDesignFlatButton}" IsCancel="True"

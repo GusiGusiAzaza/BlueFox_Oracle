@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Forms.VisualStyles;
 using System.Windows.Input;
 using System.Windows.Media;
 using BlueFoxTests_Oracle.Components;
 using BlueFoxTests_Oracle.Models;
 using MahApps.Metro.Controls;
+using MaterialDesignThemes.Wpf;
+using VerticalAlignment = System.Windows.VerticalAlignment;
 
 namespace BlueFoxTests_Oracle.Windows
 {
@@ -16,28 +19,40 @@ namespace BlueFoxTests_Oracle.Windows
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
+        public static Snackbar Snackbar;
+        public static DialogHost Dialog;
+        public static Grid Grid;
+        public static TextBlock DialogText;
         public static User User = DB.GetUserByUsername("God");
         private static Random _rand = new Random();
-        public static bool IsAdmin;
+        public static int AdminId;
 
         public MainWindow()
         {
             InitializeComponent();
             DB.Initialize();
-            User = DB.GetUserByUsername("God");
+            Grid = MainGrid;
+            Snackbar = MainSnackbar;
+            Dialog = DialogHost;
+            DialogText = DialogTxt;
+            //User = DB.GetUserByUsername("God");
             _rand = new Random();
 
             ThemesTab.Children.Add(new UserControls.ThemesUserControl(this));
         }
 
-        public MainWindow(User user, bool isAdmin)
+        public MainWindow(User user, int adminId)
         {
-            User = user;
-            IsAdmin = isAdmin;
-            _rand = new Random();
             InitializeComponent();
-
-            if (!isAdmin)
+            User = user;
+            AdminId = adminId;
+            _rand = new Random();
+            DialogText = DialogTxt;
+            Grid = MainGrid;
+            Dialog = DialogHost;
+            Snackbar = MainSnackbar;
+            Snackbar.MessageQueue.IgnoreDuplicate = true;
+            if (AdminId == 0)
             {
                 AdminTabItem.Content = "Only For Admins";
             }
@@ -299,6 +314,18 @@ namespace BlueFoxTests_Oracle.Windows
             {
                 MessageBox.Show("Incorrect URI", "Warning");
             }
+        }
+
+        public void EnableGrid(object sender, RoutedEventArgs e)
+        {
+            Grid.IsEnabled = true;
+        }
+
+        public static void ShowDialog(string text)
+        {
+            Dialog.IsOpen = true;
+            Grid.IsEnabled = false;
+            DialogText.Text = text;
         }
     }
 }

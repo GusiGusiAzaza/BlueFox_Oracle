@@ -38,9 +38,8 @@ namespace BlueFoxTests_Oracle.UserControls
                     Education = Education.Text,
                     Work = Work.Text
                 };
+                MainWindow.Snackbar.MessageQueue.Enqueue("Saved!");
                 DB.UpdateUserInfo(userInfo);
-                MainGrid.IsEnabled = false;
-                DialogHost.IsOpen = true;
             }
             catch (Exception exception)
             {
@@ -55,7 +54,7 @@ namespace BlueFoxTests_Oracle.UserControls
             {
                 var userInfo = DB.GetUserInfo(MainWindow.User.UserId);
 
-                if (MainWindow.IsAdmin) ProfileIcon.Kind = PackIconKind.AccountCog;
+                if (MainWindow.AdminId != 0) ProfileIcon.Kind = PackIconKind.AccountCog;
                 Username.Text = MainWindow.User.Username;
                 if (!IsNullOrEmpty(userInfo.Name)) Namee.Text = userInfo.Name;
                 if (!IsNullOrEmpty(userInfo.Gender)) Gender.Text = userInfo.Gender;
@@ -70,11 +69,6 @@ namespace BlueFoxTests_Oracle.UserControls
                 MessageBox.Show(exception.Message, "Error");
                 Logger.Log.Error(exception);
             }
-        }
-
-        private void EnableGrid(object sender, RoutedEventArgs e)
-        {
-            MainGrid.IsEnabled = true;
         }
     }
 }

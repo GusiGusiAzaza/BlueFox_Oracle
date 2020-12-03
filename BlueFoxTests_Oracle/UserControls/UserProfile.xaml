@@ -22,19 +22,6 @@
         <TextBlock x:Name="Username" Text="##Noname##" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
                    Style="{DynamicResource MaterialDesignHeadline3TextBlock}"
                    HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="DeepSkyBlue" />
-        <wpf:DialogHost Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="2" x:Name="DialogHost" CloseOnClickAway="False"
-                        DialogTheme="Inherit" OverlayBackground="Gray" DialogMargin="0">
-            <wpf:DialogHost.DialogContent>
-                <StackPanel>
-                    <TextBlock FontSize="20" Margin="20 10">
-                        Information successfully changed
-                    </TextBlock>
-                    <Button Style="{StaticResource MaterialDesignFlatButton}" IsCancel="True"
-                            Command="{x:Static wpf:DialogHost.CloseDialogCommand}"
-                            HorizontalAlignment="Center" Margin="10 10" Click="EnableGrid">OK</Button>
-                </StackPanel>
-            </wpf:DialogHost.DialogContent>
-        </wpf:DialogHost>
         <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="1" BorderBrush="DeepSkyBlue"
                 CornerRadius="10" Margin="5 50 5 5">
             <StackPanel Margin="20 0">
