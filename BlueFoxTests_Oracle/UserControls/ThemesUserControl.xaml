@@ -6,6 +6,14 @@
              mc:Ignorable="d" 
              FontFamily="../Resources/Decorations/Fonts/#Mark" FontWeight="Normal"
              Height="Auto" Width="1000">
-    <WrapPanel x:Name="WrapPanel" HorizontalAlignment="Center">
-    </WrapPanel>
+   <Grid>
+       <Grid.ColumnDefinitions>
+           <ColumnDefinition Width="0.5*"/>
+           <ColumnDefinition Width="0.5*"/>
+       </Grid.ColumnDefinitions>
+       <WrapPanel x:Name="ThemesWrapPanel" HorizontalAlignment="Center" Grid.Column="0">
+       </WrapPanel>
+
+
+    </Grid>
 </UserControl>

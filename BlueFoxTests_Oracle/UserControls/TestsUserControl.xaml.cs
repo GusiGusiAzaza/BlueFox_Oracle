@@ -15,7 +15,7 @@ namespace BlueFoxTests_Oracle.UserControls
     public partial class TestsUserControl : UserControl
     {
         private MainWindow _mainWindow;
-        private static WrapPanel _wrapPanel;
+        private static WrapPanel _testsWrapPanel;
         private Models.Theme currentTheme;
         public static bool _testIsGoing = false;
 
@@ -23,7 +23,7 @@ namespace BlueFoxTests_Oracle.UserControls
         public TestsUserControl()
         {
             InitializeComponent();
-            _wrapPanel = WrapPanel;
+            _testsWrapPanel = TestsWrapPanel;
         }
 
         public TestsUserControl(string themeName, MainWindow mainWindow)
@@ -44,7 +44,7 @@ namespace BlueFoxTests_Oracle.UserControls
                     return;
                 }
 
-                _wrapPanel.Children.Clear();
+                _testsWrapPanel.Children.Clear();
                 foreach (var test in db.Tests)
                 {
                     if (test.Theme_Id == currentTheme.Theme_Id)
@@ -63,7 +63,7 @@ namespace BlueFoxTests_Oracle.UserControls
                             }
                         };
                         newSnack.Message.ActionClick += Snack_OnClick;
-                        _wrapPanel.Children.Add(newSnack);
+                        _testsWrapPanel.Children.Add(newSnack);
                     }
                 }
             }

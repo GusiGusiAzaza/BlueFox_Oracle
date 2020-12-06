@@ -26,8 +26,7 @@ namespace BlueFoxTests_Oracle.UserControls
         {
             try
             {
-                using BlueFoxContext db = new BlueFoxContext();
-                foreach (var theme in db.Themes_For_Tests)
+                foreach (var theme in DB.GetThemes())
                 {
                     Snackbar newSnack = new Snackbar()
                     {
@@ -43,7 +42,7 @@ namespace BlueFoxTests_Oracle.UserControls
                         }
                     };
                     newSnack.Message.ActionClick += Snack_OnClick;
-                    WrapPanel.Children.Add(newSnack);
+                    ThemesWrapPanel.Children.Add(newSnack);
                 }
 
             }

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.IO.Packaging;
-using System.Windows.Documents;
 using BlueFoxTests_Oracle.Models;
 using Oracle.ManagedDataAccess.Client;
 
@@ -63,6 +61,29 @@ namespace BlueFoxTests_Oracle.Components
                         UserId = int.Parse(reader["user_id"].ToString()),
                         Username = reader["username"].ToString(),
                         PasswordHash = reader["password_hash"].ToString()
+                    };
+
+            return user;
+        }
+
+        public static User CheckUserLogin(string username, string pHash)
+        {
+            User user = null;
+            var checkUserLoginCmd = new OracleCommand
+            {
+                Connection = Conn,
+                CommandText = "CHECK_USER_LOGIN",
+                CommandType = CommandType.StoredProcedure
+            };
+            checkUserLoginCmd.Parameters.Add("usrname", OracleDbType.NVarchar2).Value = username;
+            checkUserLoginCmd.Parameters.Add("p_hash", OracleDbType.NVarchar2).Value = pHash;
+            var reader = checkUserLoginCmd.ExecuteReader();
+            if (reader.HasRows)
+                while (reader.Read())
+                    user = new User
+                    {
+                        UserId = int.Parse(reader["user_id"].ToString()),
+                        Username = reader["username"].ToString()
                     };
 
             return user;
@@ -150,7 +171,6 @@ namespace BlueFoxTests_Oracle.Components
             getUserInfo.Parameters.Add("u_id", OracleDbType.Decimal).Value = id;
             var reader = getUserInfo.ExecuteReader();
             while (reader.Read())
-            {
                 userInfo = new User_Info
                 {
                     Name = reader["name"].ToString(),
@@ -161,7 +181,6 @@ namespace BlueFoxTests_Oracle.Components
                     Education = reader["education"].ToString(),
                     Work = reader["work"].ToString()
                 };
-            }
 
             return userInfo;
         }
@@ -187,7 +206,7 @@ namespace BlueFoxTests_Oracle.Components
 
         public static List<Theme> GetThemes()
         {
-            List<Theme> themes = new List<Theme>();
+            var themes = new List<Theme>();
             var getThemesCmd = new OracleCommand
             {
                 Connection = Conn,
@@ -196,13 +215,11 @@ namespace BlueFoxTests_Oracle.Components
             };
             var reader = getThemesCmd.ExecuteReader();
             while (reader.Read())
-            {
                 themes.Add(new Theme
                 {
                     Theme_Id = int.Parse(reader["theme_id"].ToString()),
                     Theme_Name = reader["theme_name"].ToString()
                 });
-            }
 
             return themes;
         }
@@ -221,7 +238,7 @@ namespace BlueFoxTests_Oracle.Components
 
         public static List<Test> GetTestsByThemeId(int theme_id)
         {
-            List<Test> tests = new List<Test>();
+            var tests = new List<Test>();
             var getTestsByThemeIdCmd = new OracleCommand
             {
                 Connection = Conn,
@@ -231,7 +248,6 @@ namespace BlueFoxTests_Oracle.Components
             getTestsByThemeIdCmd.Parameters.Add("th_id", OracleDbType.Decimal).Value = theme_id;
             var reader = getTestsByThemeIdCmd.ExecuteReader();
             while (reader.Read())
-            {
                 tests.Add(new Test
                 {
                     Test_Id = int.Parse(reader["test_id"].ToString()),
@@ -241,7 +257,6 @@ namespace BlueFoxTests_Oracle.Components
                     Time_Limit_In_Minutes = int.Parse(reader["time_limit_in_minutes"].ToString()),
                     Passing_Score = int.Parse(reader["passing_score"].ToString())
                 });
-            }
 
             return tests;
         }
@@ -249,7 +264,7 @@ namespace BlueFoxTests_Oracle.Components
 
         public static List<Questions_For_Tests> GetQuestionsByTestId(int test_id)
         {
-            List<Questions_For_Tests> questions = new List<Questions_For_Tests>();
+            var questions = new List<Questions_For_Tests>();
             var getQsByTestIdCmd = new OracleCommand
             {
                 Connection = Conn,
@@ -259,22 +274,20 @@ namespace BlueFoxTests_Oracle.Components
             getQsByTestIdCmd.Parameters.Add("t_id", OracleDbType.Decimal).Value = test_id;
             var reader = getQsByTestIdCmd.ExecuteReader();
             while (reader.Read())
-            {
-                questions.Add(new Questions_For_Tests()
+                questions.Add(new Questions_For_Tests
                 {
                     Question_Id = int.Parse(reader["question_id"].ToString()),
                     Test_Id = int.Parse(reader["test_id"].ToString()),
                     Question_Number = int.Parse(reader["question_number"].ToString()),
                     Question = reader["question"].ToString()
                 });
-            }
 
             return questions;
         }
 
         public static List<Answers_For_Tests> GetAnswersByQuestionId(int question_id)
         {
-            List<Answers_For_Tests> answers = new List<Answers_For_Tests>();
+            var answers = new List<Answers_For_Tests>();
             var getAnswersByQidCmd = new OracleCommand
             {
                 Connection = Conn,
@@ -284,15 +297,13 @@ namespace BlueFoxTests_Oracle.Components
             getAnswersByQidCmd.Parameters.Add("q_id", OracleDbType.Decimal).Value = question_id;
             var reader = getAnswersByQidCmd.ExecuteReader();
             while (reader.Read())
-            {
-                answers.Add(new Answers_For_Tests()
+                answers.Add(new Answers_For_Tests
                 {
                     Answer_Id = int.Parse(reader["answer_id"].ToString()),
                     Question_Id = int.Parse(reader["question_id"].ToString()),
                     Is_Right = int.Parse(reader["is_right"].ToString()) == 1,
                     Answer = reader["answer"].ToString()
                 });
-            }
 
             return answers;
         }
@@ -335,7 +346,7 @@ namespace BlueFoxTests_Oracle.Components
                 CommandText = "ADD_ANSWER",
                 CommandType = CommandType.StoredProcedure
             };
-            addAnswerCmd.Parameters.Add("answ", OracleDbType.Decimal).Value = newAnswer.Answer;
+            addAnswerCmd.Parameters.Add("answ", OracleDbType.NVarchar2).Value = newAnswer.Answer;
             addAnswerCmd.Parameters.Add("is_r", OracleDbType.Decimal).Value = newAnswer.Is_Right ? 1 : 0;
             addAnswerCmd.Parameters.Add("q_id", OracleDbType.NVarchar2).Value = newAnswer.Question_Id;
             await addAnswerCmd.ExecuteNonQueryAsync();

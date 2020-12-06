@@ -6,6 +6,6 @@
              mc:Ignorable="d" 
              FontFamily="../Resources/Decorations/Fonts/#Mark" FontWeight="Normal"
              Height="Auto" Width="1000">
-    <WrapPanel x:Name="WrapPanel" HorizontalAlignment="Center">
+    <WrapPanel x:Name="TestsWrapPanel" HorizontalAlignment="Center">
     </WrapPanel>
 </UserControl>
