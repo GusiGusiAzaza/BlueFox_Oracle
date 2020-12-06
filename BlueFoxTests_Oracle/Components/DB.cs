@@ -224,6 +224,28 @@ namespace BlueFoxTests_Oracle.Components
             return themes;
         }
 
+        public static Theme GetThemeByName(string themeName)
+        {
+            Theme theme = null;
+            var getUserByUsernameCmd = new OracleCommand
+            {
+                Connection = Conn,
+                CommandText = "GET_THEME_BY_NAME",
+                CommandType = CommandType.StoredProcedure
+            };
+            getUserByUsernameCmd.Parameters.Add("th_name", OracleDbType.NVarchar2).Value = themeName;
+            var reader = getUserByUsernameCmd.ExecuteReader();
+            while (reader.Read())
+                if (string.Equals(themeName, reader["theme_name"].ToString(), StringComparison.CurrentCultureIgnoreCase))
+                    theme = new Theme()
+                    {
+                        Theme_Id = int.Parse(reader["theme_id"].ToString()),
+                        Theme_Name = reader["theme_name"].ToString(),
+                    };
+
+            return theme;
+        }
+
         public static async void AddTheme(Theme newTheme)
         {
             var addThemeCmd = new OracleCommand
@@ -259,6 +281,32 @@ namespace BlueFoxTests_Oracle.Components
                 });
 
             return tests;
+        }
+
+        public static Test GetTestByName(string testName)
+        {
+            Test test = null;
+            var getUserByUsernameCmd = new OracleCommand
+            {
+                Connection = Conn,
+                CommandText = "GET_TEST_BY_NAME",
+                CommandType = CommandType.StoredProcedure
+            };
+            getUserByUsernameCmd.Parameters.Add("t_name", OracleDbType.NVarchar2).Value = testName;
+            var reader = getUserByUsernameCmd.ExecuteReader();
+            while (reader.Read())
+                if (string.Equals(testName, reader["test_name"].ToString(), StringComparison.CurrentCultureIgnoreCase))
+                    test = new Test()
+                    {
+                        Test_Id = int.Parse(reader["test_id"].ToString()),
+                        Admin_Id = int.Parse(reader["admin_id"].ToString()),
+                        Test_Name = reader["test_name"].ToString(),
+                        Theme_Id = int.Parse(reader["theme_id"].ToString()),
+                        Time_Limit_In_Minutes = int.Parse(reader["time_limit_in_minutes"].ToString()),
+                        Passing_Score = int.Parse(reader["passing_score"].ToString())
+                    };
+
+            return test;
         }
 
 

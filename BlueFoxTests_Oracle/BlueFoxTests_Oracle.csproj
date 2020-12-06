@@ -146,11 +146,11 @@
     <Compile Include="UserControls\TestResults.xaml.cs">
       <DependentUpon>TestResults.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\TestSolution.xaml.cs">
+      <DependentUpon>TestSolution.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\TestsUserControl.xaml.cs">
       <DependentUpon>TestsUserControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\ThemesUserControl.xaml.cs">
-      <DependentUpon>ThemesUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\UserProfile.xaml.cs">
       <DependentUpon>UserProfile.xaml</DependentUpon>
@@ -215,11 +215,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UserControls\TestsUserControl.xaml">
+    <Page Include="UserControls\TestSolution.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UserControls\ThemesUserControl.xaml">
+    <Page Include="UserControls\TestsUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

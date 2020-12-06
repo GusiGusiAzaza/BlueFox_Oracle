@@ -1,70 +1,126 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using BlueFoxTests_Oracle.Components;
 using BlueFoxTests_Oracle.Models;
 using BlueFoxTests_Oracle.Windows;
 using MaterialDesignThemes.Wpf;
+using Theme = BlueFoxTests_Oracle.Models.Theme;
 
 namespace BlueFoxTests_Oracle.UserControls
 {
     /// <summary>
-    /// Логика взаимодействия для TestsUserControl.xaml
+    ///     Логика взаимодействия для TestUserControl.xaml
     /// </summary>
     public partial class TestsUserControl : UserControl
     {
-        private MainWindow _mainWindow;
         private static WrapPanel _testsWrapPanel;
-        private Models.Theme currentTheme;
-        public static bool _testIsGoing = false;
-
+        public static bool TestIsGoing;
+        private readonly TestSolution _testSolution;
+        private List<Test> _tests;
+        private List<Theme> _themes;
+        private Theme _currentTheme;
+        private Test _currentTest;
 
         public TestsUserControl()
         {
             InitializeComponent();
+            LoadThemes();
             _testsWrapPanel = TestsWrapPanel;
         }
 
-        public TestsUserControl(string themeName, MainWindow mainWindow)
-        {
-            _mainWindow = mainWindow;
-            LoadTestsContent(themeName);
-        }
-
-        private void LoadTestsContent(string themeName)
+        private void LoadThemes()
         {
             try
             {
-                using BlueFoxContext db = new BlueFoxContext();
-                currentTheme = db.Themes_For_Tests.FirstOrDefault(t => t.Theme_Name == themeName);
-                if (currentTheme == null)
+                ThemesWrapPanel.Children.Clear();
+                _themes = DB.GetThemes();
+                foreach (var theme in _themes)
                 {
-                    MessageBox.Show($"No tests were founded for \"{themeName}\" theme");
+                    var newSnack = new Snackbar
+                    {
+                        IsActive = true,
+                        Margin = new Thickness(10),
+                        ActionButtonStyle = FindResource("MaterialDesignSnackbarActionMidButton") as Style,
+                        ActionButtonPlacement = SnackbarActionButtonPlacementMode.Inline,
+                        MessageQueue = new SnackbarMessageQueue(),
+                        Message = new SnackbarMessage
+                        {
+                            Content = theme.Theme_Name,
+                            ActionContent = "SHOW TESTS"
+                        }
+                    };
+                    newSnack.Message.ActionClick += ThemeSnack_OnClick;
+                    ThemesWrapPanel.Children.Add(newSnack);
+                }
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, "Error");
+                Logger.Log.Error(exception);
+            }
+        }
+
+        private void ThemeSnack_OnClick(object sender, EventArgs e)
+        {
+            try
+            {
+                var themeName = ((SnackbarMessage)sender).Content.ToString();
+
+                if (_currentTheme == null || _currentTheme.Theme_Name != themeName)
+                    LoadTests(themeName);
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, "Error");
+                Logger.Log.Error(exception);
+            }
+        }
+
+        private void LoadTests(string themeName)
+        {
+            try
+            {
+                var theme = _themes.FirstOrDefault(th => th.Theme_Name == themeName);
+                if (theme == null)
+                {
+                    MainWindow.ShowDialog("Please try again later");
                     return;
                 }
+                _tests = DB.GetTestsByThemeId(theme.Theme_Id);
+
+                if (!_tests.Any())
+                {
+                    MainWindow.ShowDialog($"No tests were found for \"{themeName}\" theme");
+                    return;
+                }
+
+                _currentTheme = theme;
 
                 _testsWrapPanel.Children.Clear();
-                foreach (var test in db.Tests)
+                TbTests.Text = $"{themeName} tests";
+                TbTests.Visibility = Visibility.Visible;
+                foreach (var test in _tests)
                 {
-                    if (test.Theme_Id == currentTheme.Theme_Id)
+                    var newSnack = new Snackbar
                     {
-                        Snackbar newSnack = new Snackbar()
+                        IsActive = true,
+                        Margin = new Thickness(10),
+                        ActionButtonStyle = FindResource("MaterialDesignSnackbarActionMidButton") as Style,
+                        ActionButtonPlacement = SnackbarActionButtonPlacementMode.Inline,
+                        MessageQueue = new SnackbarMessageQueue(),
+                        Message = new SnackbarMessage
                         {
-                            IsActive = true,
-                            Margin = new Thickness(15),
-                            ActionButtonStyle = FindResource("MaterialDesignSnackbarActionMidButton") as Style,
-                            ActionButtonPlacement = SnackbarActionButtonPlacementMode.Inline,
-                            MessageQueue = new SnackbarMessageQueue(),
-                            Message = new SnackbarMessage()
-                            {
-                                Content = test.Test_Name,
-                                ActionContent = "START TEST",
-                            }
-                        };
-                        newSnack.Message.ActionClick += Snack_OnClick;
-                        _testsWrapPanel.Children.Add(newSnack);
-                    }
+                            Content = test.Test_Name,
+                            ActionContent = "START TEST"
+                        }
+                    };
+                    newSnack.Message.ActionClick += TestSnack_OnClick;
+                    _testsWrapPanel.Children.Add(newSnack);
                 }
             }
             catch (Exception exception)
@@ -72,38 +128,43 @@ namespace BlueFoxTests_Oracle.UserControls
                 MessageBox.Show(exception.Message, "Error");
                 Logger.Log.Error(exception);
             }
-
         }
 
-        private void Snack_OnClick(object sender, EventArgs e)
+        private void TestSnack_OnClick(object sender, EventArgs e)
         {
-            if (_testIsGoing)
+            if (TestIsGoing)
             {
-                MessageBox.Show("You have ongoing test! Go to the Soution Tab!", "Can't start another test");
+                MessageBox.Show("You have ongoing test! Go to the Solution Tab!", "Can't start another test");
                 return;
             }
+
             try
             {
-                var testName = (SnackbarMessage)sender;
-                using BlueFoxContext db = new BlueFoxContext();
-                Test test = db.Tests.FirstOrDefault(t => t.Test_Name == testName.Content.ToString());
-                if (test == null || test.Questions_For_Tests.Count == 0)
+                var testName = (SnackbarMessage) sender;
+                _currentTest = DB.GetTestByName(testName.Content.ToString());
+                if (_currentTest == null || _currentTest.Questions_For_Tests.Count == 0)
                 {
-                    MessageBox.Show("No Questions In this Test");
+                    MainWindow.ShowDialog("Sorry. There are no questions in this test yet");
                     return;
                 }
-                _mainWindow.LoadTestData(test);
-                _mainWindow.SolvingTabGrid.Visibility = Visibility.Visible;
-                _mainWindow.ResultsGrid.Visibility = Visibility.Collapsed;
-                _mainWindow.ResultsGrid.Children.Clear();
-                MessageBox.Show($"You started test \"{test.Test_Name}\". Go to the Solution Tab", "Test Started");
-                _testIsGoing = true;
+
+                //_mainWindow.LoadTestData(_currentTest);
+                //_mainWindow.SolvingTabGrid.Visibility = Visibility.Visible;
+                //_mainWindow.ResultsGrid.Visibility = Visibility.Collapsed;
+                //_mainWindow.ResultsGrid.Children.Clear();
+                MainWindow.ShowDialog($"You started test \"{_currentTest.Test_Name}\". Go to the Solution Tab");
+                TestIsGoing = true;
             }
             catch (Exception exception)
             {
                 MessageBox.Show(exception.Message, "Error");
                 Logger.Log.Error(exception);
             }
+        }
+
+        private void ReloadThemes(object sender, RoutedEventArgs e)
+        {
+            LoadThemes();
         }
     }
 }

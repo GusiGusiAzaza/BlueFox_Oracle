@@ -133,6 +133,32 @@ namespace BlueFoxTests_Oracle.Windows
             //        PasswordHash = hash
             //    });
             //}
+
+            string th_name;
+            for (int i = 11; i < 30; i++)
+            {
+                th_name = $"Theme{i}";
+                DB.AddTheme(new Models.Theme
+                {
+                    Theme_Name = th_name
+                });
+            }
+
+            string t_name;
+            for (int i = 11; i < 30; i++)
+            {
+                t_name = $"Test{i}";
+                DB.AddTest(new Test
+                {
+                    Theme_Id = 121,
+                    Admin_Id = 41,
+                    Test_Name = t_name,
+                    Time_Limit_In_Minutes = 10,
+                    Passing_Score = 50
+                });
+            }
+
+
             LoginWarningLabel.Foreground = new SolidColorBrush(Color.FromRgb(255, 0, 0));
             LoginWarningLabel.Text = (string)TryFindResource("login_ForgotPasswordWarning");
             LoginWarningLabel.Visibility = Visibility.Visible;

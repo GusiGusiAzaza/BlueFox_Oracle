@@ -21,23 +21,21 @@ namespace BlueFoxTests_Oracle.UserControls
         private readonly Test _testInBd = new Test();
         private readonly List<Theme> _themes = new List<Theme>();
 
-        private readonly Theme themeInBD = new Theme();
+        private readonly Theme _themeInBd = new Theme();
         private bool _canSaveTest;
         private List<Answers_For_Tests> _listAnswerInDb;
         private List<Questions_For_Tests> _questions = new List<Questions_For_Tests>();
         private List<Test> _tests = new List<Test>();
-        private bool dontSelectEventQuestion;
-        private bool dontSelectEventTest;
+        private bool _dontSelectEventQuestion;
+        private bool _dontSelectEventTest;
 
-        private int numberQuestion = 1;
+        private int _numberQuestion = 1;
 
-        private Questions_For_Tests SelectedQuestion = new Questions_For_Tests();
+        private Questions_For_Tests _selectedQuestion = new Questions_For_Tests();
 
-        private string SelectedQuestionn = Empty;
-        private Test SelectedTest = new Test();
-        private string SelectedTestt = Empty;
-        private Theme SelectedTheme = new Theme();
-        private string SelectedThemee = Empty;
+        private string _selectedQuestionn = Empty;
+        private string _selectedTest = Empty;
+        private Theme _selectedTheme = new Theme();
 
         public AdminCreateTestControl()
         {
@@ -98,24 +96,22 @@ namespace BlueFoxTests_Oracle.UserControls
         {
             try
             {
-                dontSelectEventTest = true;
-                dontSelectEventQuestion = true;
+                _dontSelectEventTest = true;
+                _dontSelectEventQuestion = true;
                 listTests.Items.Clear();
                 SelectedTestQuestions.Items.Clear();
 
                 var item = (ListViewItem) listThemes.SelectedItems[0];
-                SelectedThemee = item.Content.ToString();
-                SelectedTheme = _themes.First(t => t.Theme_Name == SelectedThemee);
-                //var currentTheme = _themes.First(t => t.Theme_Name == SelectedThemee);
-                _tests = DB.GetTestsByThemeId(SelectedTheme.Theme_Id);
+                _selectedTheme = _themes.First(t => t.Theme_Name == item.Content.ToString());
+                _tests = DB.GetTestsByThemeId(_selectedTheme.Theme_Id);
                 foreach (var test in _tests)
                 {
                     var testsViewItem = new ListViewItem {Content = test.Test_Name};
                     listTests.Items.Add(testsViewItem);
                 }
 
-                dontSelectEventTest = false;
-                dontSelectEventQuestion = true;
+                _dontSelectEventTest = false;
+                _dontSelectEventQuestion = true;
             }
             catch (Exception exception)
             {
@@ -128,15 +124,15 @@ namespace BlueFoxTests_Oracle.UserControls
         {
             try
             {
-                if (!dontSelectEventTest)
+                if (!_dontSelectEventTest)
                 {
-                    dontSelectEventQuestion = true;
+                    _dontSelectEventQuestion = true;
                     var item = (ListViewItem) listTests.SelectedItems[0];
-                    SelectedTestt = item.Content.ToString();
+                    _selectedTest = item.Content.ToString();
                     SelectedTestQuestions.Items.Clear();
                     AnswersPanel.IsEnabled = true;
 
-                    var currentTest = _tests.FirstOrDefault(t => t.Test_Name == SelectedTestt);
+                    var currentTest = _tests.FirstOrDefault(t => t.Test_Name == _selectedTest);
                     if (currentTest == null) return;
                     _questions = DB.GetQuestionsByTestId(currentTest.Test_Id);
                     foreach (var question in _questions)
@@ -145,11 +141,11 @@ namespace BlueFoxTests_Oracle.UserControls
                         SelectedTestQuestions.Items.Add(existingQuestion);
                     }
 
-                    dontSelectEventQuestion = false;
+                    _dontSelectEventQuestion = false;
                 }
                 else
                 {
-                    dontSelectEventTest = false;
+                    _dontSelectEventTest = false;
                 }
             }
             catch (Exception exception)
@@ -163,7 +159,7 @@ namespace BlueFoxTests_Oracle.UserControls
         {
             try
             {
-                if (!dontSelectEventQuestion)
+                if (!_dontSelectEventQuestion)
                 {
                     txbAnswer1.Text = Empty;
                     txbAnswer2.Text = Empty;
@@ -171,11 +167,11 @@ namespace BlueFoxTests_Oracle.UserControls
                     txbAnswer4.Text = Empty;
                     AnswersPanel.IsEnabled = true;
                     var item = (ListViewItem) CurrentlyAddedQuestions.SelectedItems[0];
-                    SelectedQuestionn = item.Content.ToString();
+                    _selectedQuestionn = item.Content.ToString();
                 }
                 else
                 {
-                    dontSelectEventQuestion = false;
+                    _dontSelectEventQuestion = false;
                 }
             }
             catch (Exception exception)
@@ -189,7 +185,7 @@ namespace BlueFoxTests_Oracle.UserControls
         {
             try
             {
-                if (!dontSelectEventQuestion)
+                if (!_dontSelectEventQuestion)
                 {
                     var item = (ListViewItem) SelectedTestQuestions.SelectedItems[0];
                     var selectedQuestionTemp = item.Content.ToString();
@@ -207,7 +203,7 @@ namespace BlueFoxTests_Oracle.UserControls
                 }
                 else
                 {
-                    dontSelectEventQuestion = false;
+                    _dontSelectEventQuestion = false;
                 }
             }
             catch (Exception exception)
@@ -221,7 +217,7 @@ namespace BlueFoxTests_Oracle.UserControls
         {
             if (!IsNullOrEmpty(txbQuestion.Text))
             {
-                SelectedQuestionn = txbQuestion.Text;
+                _selectedQuestionn = txbQuestion.Text;
                 _questionInDb.Question = txbQuestion.Text;
 
                 var newItem = new ListViewItem {Content = txbQuestion.Text};
@@ -311,7 +307,7 @@ namespace BlueFoxTests_Oracle.UserControls
                 {
                     var flagTest = false;
 
-                    foreach (var test in DB.GetTestsByThemeId(SelectedTheme.Theme_Id))
+                    foreach (var test in DB.GetTestsByThemeId(_selectedTheme.Theme_Id))
                         if (txbTest.Text == test.Test_Name)
                         {
                             flagTest = true;
@@ -320,7 +316,7 @@ namespace BlueFoxTests_Oracle.UserControls
 
                     if (!flagTest)
                     {
-                        SelectedTestt = txbTest.Text;
+                        _selectedTest = txbTest.Text;
 
                         var newItem = new ListViewItem {Content = txbTest.Text};
                         _testInBd.Test_Name = txbTest.Text;
@@ -353,19 +349,19 @@ namespace BlueFoxTests_Oracle.UserControls
         {
             try
             {
-                if (themeInBD != null && _testInBd != null && _questionInDb != null && _listAnswerInDb != null)
+                if (_themeInBd != null && _testInBd != null && _questionInDb != null && _listAnswerInDb != null)
                 {
-                    if (IsNullOrEmpty(themeInBD.Theme_Name) || IsNullOrEmpty(_testInBd.Test_Name))
+                    if (IsNullOrEmpty(_themeInBd.Theme_Name) || IsNullOrEmpty(_testInBd.Test_Name))
                     {
-                        themeInBD.Theme_Name = SelectedThemee;
-                        _testInBd.Test_Name = SelectedTestt;
+                        _themeInBd.Theme_Name = _selectedTheme.Theme_Name;
+                        _testInBd.Test_Name = _selectedTest;
                     }
 
                     //check if we can save
                     var flagSave = false;
                     var countAnswer = 0;
 
-                    if (!IsNullOrEmpty(themeInBD.Theme_Name) && !IsNullOrEmpty(_testInBd.Test_Name) &&
+                    if (!IsNullOrEmpty(_themeInBd.Theme_Name) && !IsNullOrEmpty(_testInBd.Test_Name) &&
                         !IsNullOrEmpty(_questionInDb.Question) && _listAnswerInDb.Count == 4)
                     {
                         foreach (var t in _listAnswerInDb)
@@ -391,7 +387,7 @@ namespace BlueFoxTests_Oracle.UserControls
                                 var flagTheme = false;
 
                                 foreach (var teme in DB.GetThemes())
-                                    if (SelectedThemee == teme.Theme_Name)
+                                    if (_selectedTheme.Theme_Name == teme.Theme_Name)
                                     {
                                         flagTheme = true;
                                         theme.Theme_Id = teme.Theme_Id;
@@ -409,13 +405,13 @@ namespace BlueFoxTests_Oracle.UserControls
                                     return;
                                 }
 
-                                var tests = DB.GetTestsByThemeId(SelectedTheme.Theme_Id);
+                                var tests = DB.GetTestsByThemeId(_selectedTheme.Theme_Id);
                                 var test = new Test();
                                 var flagTest = false;
 
                                 if (tests.Any())
                                     foreach (var teste in tests)
-                                        if (SelectedTestt == teste.Test_Name)
+                                        if (_selectedTest == teste.Test_Name)
                                         {
                                             flagTest = true;
                                             test.Test_Id = teste.Test_Id;
@@ -443,10 +439,10 @@ namespace BlueFoxTests_Oracle.UserControls
                                     MainWindow.Snackbar.MessageQueue.Enqueue("Adding question to selected test...");
                                 }
 
-                                tests = DB.GetTestsByThemeId(SelectedTheme.Theme_Id);
+                                tests = DB.GetTestsByThemeId(_selectedTheme.Theme_Id);
                                 if (tests.Any())
                                     foreach (var teste in tests)
-                                        if (SelectedTestt == teste.Test_Name)
+                                        if (_selectedTest == teste.Test_Name)
                                         {
                                             test.Test_Id = teste.Test_Id;
                                             test.Admin_Id = teste.Admin_Id;
@@ -463,7 +459,7 @@ namespace BlueFoxTests_Oracle.UserControls
 
                                 if (questions.Any())
                                     foreach (var ques in questions)
-                                        if (SelectedQuestionn == ques.Question)
+                                        if (_selectedQuestionn == ques.Question)
                                         {
                                             flagQuestion = true;
                                             question.Question_Id = ques.Question_Id;
@@ -475,16 +471,16 @@ namespace BlueFoxTests_Oracle.UserControls
 
                                 if (!flagQuestion)
                                 {
-                                    numberQuestion = questions.Count + 1;
+                                    _numberQuestion = questions.Count + 1;
                                     var newQuestion = new Questions_For_Tests
                                     {
                                         Test_Id = test.Test_Id,
-                                        Question_Number = numberQuestion,
+                                        Question_Number = _numberQuestion,
                                         Question = _questionInDb.Question
                                     };
                                     DB.AddQuestion(newQuestion);
                                     questions.Add(newQuestion);
-                                    numberQuestion++;
+                                    _numberQuestion++;
                                 }
                                 else
                                 {
@@ -497,7 +493,7 @@ namespace BlueFoxTests_Oracle.UserControls
 
                                 if (questions.Any())
                                     foreach (var ques in questions)
-                                        if (SelectedQuestionn == ques.Question)
+                                        if (_selectedQuestionn == ques.Question)
                                         {
                                             isQuestion = true;
                                             question.Question_Id = ques.Question_Id;
@@ -527,8 +523,8 @@ namespace BlueFoxTests_Oracle.UserControls
                                     transaction.Commit();
                                     MainWindow.Snackbar.MessageQueue.Enqueue("Question added successfully!");
                                 }
-                                dontSelectEventQuestion = true;
-                                dontSelectEventTest = true;
+                                _dontSelectEventQuestion = true;
+                                _dontSelectEventTest = true;
                                 var newItem = new ListViewItem {Content = question.Question};
                                 _questions = questions;
                                 _tests = tests;

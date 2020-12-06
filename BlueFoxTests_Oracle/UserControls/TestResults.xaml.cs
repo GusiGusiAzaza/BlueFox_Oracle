@@ -36,7 +36,7 @@ namespace BlueFoxTests_Oracle.UserControls
                     using var db = new BlueFoxContext();
 
                     var answers = db.Questions_For_Tests.FirstOrDefault(q => q.Question_Id == question.Question_Id)?.Answers_For_Tests.ToList();
-                    MainWindow.Shuffle(answers);
+                    TestSolution.Shuffle(answers);
                     var border = new Border
                     {
                         CornerRadius = new CornerRadius(20),

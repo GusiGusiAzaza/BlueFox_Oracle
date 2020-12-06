@@ -123,83 +123,16 @@
                         </TabItem.Header>
 
                         <dragablz:TabablzControl Style="{DynamicResource MaterialDesignTabablzControlStyle}">
-                            <TabItem Header="Themes">
-                                <ScrollViewer VerticalScrollBarVisibility="Auto"
-                                              HorizontalScrollBarVisibility="Disabled" CanContentScroll="False">
-                                    <Grid x:Name="ThemesTab"></Grid>
-                                </ScrollViewer>
-                            </TabItem>
                             <TabItem Header="Tests">
                                 <ScrollViewer VerticalScrollBarVisibility="Auto"
                                               HorizontalScrollBarVisibility="Disabled" CanContentScroll="False">
-                                    <userControls:TestsUserControl />
+                                    <userControls:TestsUserControl/>
                                 </ScrollViewer>
                             </TabItem>
                             <TabItem Header="Solving Test">
                                 <ScrollViewer VerticalScrollBarVisibility="Auto"
                                               HorizontalScrollBarVisibility="Disabled" CanContentScroll="False">
-                                    <Grid>
-                                        <Grid x:Name="SolvingTabGrid" Visibility="Collapsed" Width="1000">
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                            </Grid.RowDefinitions>
-
-                                            <TextBlock x:Name="TestName" Text="##Test Name##" Foreground="White"
-                                                   Height="50" VerticalAlignment="Center"
-                                                   Background="#7A7A7A" FontSize="30" Margin="1" Padding="20 4" />
-                                            <materialDesign:PackIcon x:Name="AnswerCorrectIcon" Foreground="Transparent" Kind="Adjust" Grid.Row="0" Width="25" Height="25" HorizontalAlignment="Right" VerticalAlignment="Center"
-                                                      Margin="20 0"></materialDesign:PackIcon>
-                                            <Border x:Name="QuestionAreaPanel" Grid.Row="1" CornerRadius="20" Margin="10 0">
-                                                <Border.Background>
-                                                    <SolidColorBrush Opacity="0.3" />
-                                                </Border.Background>
-                                                <StackPanel>
-                                                    <TextBlock Margin="20 50 20 15" FontSize="25"
-                                                           VerticalAlignment="Bottom" HorizontalAlignment="Center"
-                                                           FontWeight="Bold">Question</TextBlock>
-                                                    <Grid>
-                                                        <Grid.RowDefinitions>
-                                                            <RowDefinition Height="Auto" />
-                                                            <RowDefinition Height="Auto" />
-                                                        </Grid.RowDefinitions>
-                                                        <Border Grid.Row="0" Margin="60 0" VerticalAlignment="Top"
-                                                            CornerRadius="10" BorderThickness="1"
-                                                            BorderBrush="DeepSkyBlue">
-                                                            <TextBlock x:Name="Question" Margin="5 0 0 0" FontSize="23"
-                                                                   TextWrapping="Wrap" Text="##Question##" />
-                                                        </Border>
-                                                        <StackPanel x:Name="AnswersPanel" Grid.Row="1" Margin="60 25">
-                                                            <RadioButton x:Name="Answer1"
-                                                                     Style="{StaticResource MaterialDesignLightRadioButton}"
-                                                                     Margin="5" />
-                                                            <RadioButton x:Name="Answer2"
-                                                                     Style="{StaticResource MaterialDesignLightRadioButton}"
-                                                                     Margin="5" />
-                                                            <RadioButton x:Name="Answer3"
-                                                                     Style="{StaticResource MaterialDesignLightRadioButton}"
-                                                                     Margin="5" />
-                                                            <RadioButton x:Name="Answer4"
-                                                                     Style="{StaticResource MaterialDesignLightRadioButton}"
-                                                                     Margin="5" />
-                                                        </StackPanel>
-                                                    </Grid>
-                                                </StackPanel>
-                                            </Border>
-
-                                            <Grid Grid.Row="2" Height="100">
-                                                <Button x:Name="NextQuestionButton" Content="Next Question" Height="50"
-                                                    HorizontalAlignment="Center"
-                                                    FontSize="30"
-                                                    Style="{StaticResource MaterialDesignFlatButton}"
-                                                    Click="NextQuestionButton_Click" />
-                                            </Grid>
-                                        </Grid>
-                                        <Grid x:Name="ResultsGrid" Visibility="Collapsed">
-
-                                        </Grid>
-                                    </Grid>
+                                    <userControls:TestSolution />
                                 </ScrollViewer>
                             </TabItem>
                         </dragablz:TabablzControl>
