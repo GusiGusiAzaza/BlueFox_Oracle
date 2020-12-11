@@ -90,12 +90,12 @@ namespace BlueFoxTests_Oracle.Windows
 
                 if (user != null)
                 {
-                    var isAdmin = DB.IsAdmin(user.UserId);
+                    var isAdmin = DB.IsAdmin(user.User_Id);
                     LoginWarningLabel.Visibility = Visibility.Collapsed;
                     LoginWarningIcon.Visibility = Visibility.Collapsed;
 
                     var mainWindow = new MainWindow(user, isAdmin);
-                    Logger.Log.Info($"User \"{user.Username}\"(id: {user.UserId}) successfully logged in");
+                    Logger.Log.Info($"User \"{user.Username}\"(id: {user.User_Id}) successfully logged in");
                     mainWindow.Show();
                     Close();
                 }
@@ -118,6 +118,9 @@ namespace BlueFoxTests_Oracle.Windows
         private void CantSignInButton_Click(object sender, RoutedEventArgs e)
         {
             MD5 md5 = new MD5CryptoServiceProvider();
+
+            // DB.CreateSynonymsForProcs();
+
             //string name;
             //string password;
             //for (int i = 1; i < 101000; i++)
@@ -134,29 +137,29 @@ namespace BlueFoxTests_Oracle.Windows
             //    });
             //}
 
-            string th_name;
-            for (int i = 11; i < 30; i++)
-            {
-                th_name = $"Theme{i}";
-                DB.AddTheme(new Models.Theme
-                {
-                    Theme_Name = th_name
-                });
-            }
+            //string th_name;
+            //for (int i = 11; i < 30; i++)
+            //{
+            //    th_name = $"Theme{i}";
+            //    DB.AddTheme(new Models.Theme
+            //    {
+            //        Theme_Name = th_name
+            //    });
+            //}
 
-            string t_name;
-            for (int i = 11; i < 30; i++)
-            {
-                t_name = $"Test{i}";
-                DB.AddTest(new Test
-                {
-                    Theme_Id = 121,
-                    Admin_Id = 41,
-                    Test_Name = t_name,
-                    Time_Limit_In_Minutes = 10,
-                    Passing_Score = 50
-                });
-            }
+            //string t_name;
+            //for (int i = 11; i < 30; i++)
+            //{
+            //    t_name = $"Test{i}";
+            //    DB.AddTest(new Test
+            //    {
+            //        Theme_Id = 121,
+            //        Admin_Id = 41,
+            //        Test_Name = t_name,
+            //        Time_Limit_In_Minutes = 10,
+            //        Passing_Score = 50
+            //    });
+            //}
 
 
             LoginWarningLabel.Foreground = new SolidColorBrush(Color.FromRgb(255, 0, 0));

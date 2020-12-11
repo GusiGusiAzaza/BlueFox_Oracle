@@ -8,7 +8,7 @@
              FontFamily="../Resources/Decorations/Fonts/#Mark" FontWeight="Normal"
              Height="Auto" Width="1000">
     <StackPanel>
-        <TextBlock x:Name="TestResultss" Text="Test Results" Style="{DynamicResource MaterialDesignHeadline3TextBlock}"
+        <TextBlock x:Name="TestResultsTb" Text="Test Results" Style="{DynamicResource MaterialDesignHeadline3TextBlock}"
                    HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="DeepSkyBlue" />
         <StackPanel x:Name="QuestionsGrid" Height="Auto" Margin="0 30">
 

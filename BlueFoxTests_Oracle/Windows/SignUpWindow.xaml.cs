@@ -118,12 +118,12 @@ namespace BlueFoxTests_Oracle.Windows
                 User newUser = new User
                 {
                     Username = UsernameTextBox.Text,
-                    PasswordHash = Convert.ToBase64String(md5.ComputeHash(Encoding.UTF8.GetBytes(PasswordBox.Password)))
+                    Password_Hash = Convert.ToBase64String(md5.ComputeHash(Encoding.UTF8.GetBytes(PasswordBox.Password)))
                         .Substring(0, 15)
                 };
 
                 DB.AddUser(newUser);
-                DB.InitUserInfo(DB.GetUserByUsername(UsernameTextBox.Text).UserId);
+                DB.InitUserInfoAndStats(DB.GetUserByUsername(newUser.Username).User_Id);
 
                 Logger.Log.Info($"Successfully registered new user \"{newUser.Username}\"(id: {newUser.User_Id}) to database");
 

@@ -13,10 +13,10 @@ namespace BlueFoxTests_Oracle.Models
 
         public int? Total_Answered { get; set; }
 
+        public float? Avg_Score { get; set; }
+
         public int? Finished_Tests_Count { get; set; }
 
-        public int? Right_Tests_Count { get; set; }
-
-        public virtual User User { get; set; }
+        public int? Passed_Tests_Count { get; set; }
     }
 }

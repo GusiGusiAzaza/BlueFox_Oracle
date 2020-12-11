@@ -5,20 +5,6 @@ namespace BlueFoxTests_Oracle.Models
 {
     public class User
     {
-        public int UserId { get; set; }
-        //public string Usernamee { get; set; }
-        public string PasswordHash { get; set; }
-
-
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public User()
-        {
-            Admins = new HashSet<Admin>();
-            Test_Progress = new HashSet<Test_Result>();
-        }
-
-        [Key]
         public int User_Id { get; set; }
 
         [Required]
@@ -28,12 +14,6 @@ namespace BlueFoxTests_Oracle.Models
         [Required]
         [StringLength(15)]
         public string Password_Hash { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Admin> Admins { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Test_Result> Test_Progress { get; set; }
 
         public virtual User_Info User_Info { get; set; }
 

@@ -24,20 +24,6 @@
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
 
-            <materialDesign:DialogHost Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" x:Name="DialogHost" CloseOnClickAway="False"
-                            DialogTheme="Inherit" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 300 0 0">
-                <materialDesign:DialogHost.DialogContent>
-                    <StackPanel Width="350">
-                        <TextBlock TextWrapping="WrapWithOverflow" FontSize="20" Margin="20 10" Name="DialogText" TextAlignment="Center">
-                            <TextBlock.Text>ALERT</TextBlock.Text>
-                        </TextBlock>
-                        <Button Style="{StaticResource MaterialDesignFlatButton}" IsCancel="True"
-                                Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
-                                HorizontalAlignment="Center" Margin="10 10" Click="EnableGrid">OK</Button>
-                    </StackPanel>
-                </materialDesign:DialogHost.DialogContent>
-            </materialDesign:DialogHost>
-
             <StackPanel Grid.Row="0" Grid.Column="0" Margin="10" Grid.ColumnSpan="2">
                 <!-- Панель кнопок ипорта и экспорта -->
                 <Grid Margin="0, 0, 0, 10">

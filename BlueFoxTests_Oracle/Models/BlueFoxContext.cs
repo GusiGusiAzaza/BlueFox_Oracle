@@ -19,21 +19,5 @@ namespace BlueFoxTests_Oracle.Models
         public virtual DbSet<User_Info> User_Info { get; set; }
         public virtual DbSet<User_Stats> User_Stats { get; set; }
         public virtual DbSet<User> Users { get; set; }
-
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<User>()
-                .HasMany(e => e.Admins)
-                .WithRequired(e => e.User)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<User>()
-                .HasOptional(e => e.User_Info)
-                .WithRequired(e => e.User);
-
-            modelBuilder.Entity<User>()
-                .HasOptional(e => e.User_Stats)
-                .WithRequired(e => e.User);
-        }
     }
 }

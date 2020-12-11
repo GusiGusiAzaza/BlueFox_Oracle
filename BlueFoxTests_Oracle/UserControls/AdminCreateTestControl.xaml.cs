@@ -553,17 +553,5 @@ namespace BlueFoxTests_Oracle.UserControls
                 Logger.Log.Error(exception);
             }
         }
-
-        private void EnableGrid(object sender, RoutedEventArgs e)
-        {
-            MainWindow.Grid.IsEnabled = true;
-        }
-
-        private void ShowDialog(string text)
-        {
-            DialogHost.IsOpen = true;
-            MainWindow.Grid.IsEnabled = false;
-            DialogText.Text = text;
-        }
     }
 }

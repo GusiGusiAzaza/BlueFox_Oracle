@@ -29,7 +29,7 @@ namespace BlueFoxTests_Oracle.UserControls
 
                 var userInfo = new User_Info
                 {
-                    UserId = MainWindow.User.UserId,
+                    UserId = MainWindow.User.User_Id,
                     Name = Namee.Text,
                     Gender = Gender.Text,
                     Location = Location.Text,
@@ -52,7 +52,7 @@ namespace BlueFoxTests_Oracle.UserControls
         {
             try
             {
-                var userInfo = DB.GetUserInfo(MainWindow.User.UserId);
+                var userInfo = DB.GetUserInfo(MainWindow.User.User_Id);
 
                 if (MainWindow.AdminId != 0) ProfileIcon.Kind = PackIconKind.AccountCog;
                 Username.Text = MainWindow.User.Username;

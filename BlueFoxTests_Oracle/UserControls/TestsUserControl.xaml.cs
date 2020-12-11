@@ -20,6 +20,7 @@ namespace BlueFoxTests_Oracle.UserControls
     {
         private static WrapPanel _testsWrapPanel;
         public static bool TestIsGoing;
+        public static Test OnGoingTest = new Test();
         private readonly TestSolution _testSolution;
         private List<Test> _tests;
         private List<Theme> _themes;
@@ -142,17 +143,20 @@ namespace BlueFoxTests_Oracle.UserControls
             {
                 var testName = (SnackbarMessage) sender;
                 _currentTest = DB.GetTestByName(testName.Content.ToString());
-                if (_currentTest == null || _currentTest.Questions_For_Tests.Count == 0)
+                _currentTest.Questions_For_Tests = DB.GetQuestionsByTestId(_currentTest.Test_Id);
+                if (_currentTest == null || !_currentTest.Questions_For_Tests.Any())
                 {
                     MainWindow.ShowDialog("Sorry. There are no questions in this test yet");
                     return;
                 }
 
-                //_mainWindow.LoadTestData(_currentTest);
-                //_mainWindow.SolvingTabGrid.Visibility = Visibility.Visible;
-                //_mainWindow.ResultsGrid.Visibility = Visibility.Collapsed;
-                //_mainWindow.ResultsGrid.Children.Clear();
-                MainWindow.ShowDialog($"You started test \"{_currentTest.Test_Name}\". Go to the Solution Tab");
+                OnGoingTest = _currentTest;
+                TestSolution.StartButton.Content = $"Start \"{OnGoingTest.Test_Name}\" test";
+                TestSolution.StartDescription.Text = $"You're about to start \"{OnGoingTest.Test_Name}\" test. You will have {OnGoingTest.Time_Limit_In_Minutes} " +
+                                                     $"minutes to get it done. To pass this test successfully you need to get more than {OnGoingTest.Passing_Score}% " +
+                                                     "of the maximum score. Choose wisely. Good luck.";
+                TestSolution.StartPanel.Visibility = Visibility.Visible;
+                MainWindow.ShowDialog($"You started test \"{OnGoingTest.Test_Name}\". Go to the Solution Tab");
                 TestIsGoing = true;
             }
             catch (Exception exception)

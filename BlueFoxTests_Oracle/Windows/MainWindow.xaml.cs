@@ -24,6 +24,7 @@ namespace BlueFoxTests_Oracle.Windows
         public static Grid Grid;
         public static TextBlock DialogText;
         public static User User = DB.GetUserById(141);
+        public static List<Test_Result> UserResults = DB.GetUserTestResults(141);
         public static int AdminId;
 
         public MainWindow()
@@ -34,14 +35,13 @@ namespace BlueFoxTests_Oracle.Windows
             Snackbar = MainSnackbar;
             Dialog = DialogHost;
             DialogText = DialogTxt;
-
-            //ThemesTab.Children.Add(new UserControls.ThemesUserControl(this));
         }
 
         public MainWindow(User user, int adminId)
         {
             InitializeComponent();
             User = user;
+            UserResults = DB.GetUserTestResults(User.User_Id);
             AdminId = adminId;
             DialogText = DialogTxt;
             Grid = MainGrid;
