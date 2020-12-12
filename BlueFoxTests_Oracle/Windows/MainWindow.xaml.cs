@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using BlueFoxTests_Oracle.Components;
 using BlueFoxTests_Oracle.Models;
+using BlueFoxTests_Oracle.UserControls;
 using MahApps.Metro.Controls;
 using MaterialDesignThemes.Wpf;
 using VerticalAlignment = System.Windows.VerticalAlignment;
@@ -23,14 +24,17 @@ namespace BlueFoxTests_Oracle.Windows
         public static DialogHost Dialog;
         public static Grid Grid;
         public static TextBlock DialogText;
-        public static User User = DB.GetUserById(141);
-        public static List<Test_Result> UserResults = DB.GetUserTestResults(141);
+        //public static User User = DB.GetUserById(1);
+        public static User User;
+        //public static List<Test_Result> UserResults = DB.GetUserTestResults(1);
+        public static List<Test_Result> UserResults;
         public static int AdminId;
 
         public MainWindow()
         {
-            InitializeComponent();
             DB.Initialize();
+            InitializeComponent();
+            AdminId = DB.IsAdmin(1);
             Grid = MainGrid;
             Snackbar = MainSnackbar;
             Dialog = DialogHost;
@@ -39,8 +43,9 @@ namespace BlueFoxTests_Oracle.Windows
 
         public MainWindow(User user, int adminId)
         {
-            InitializeComponent();
             User = user;
+            InitializeComponent();
+            User.User_Stats = DB.GetUserStats(User.User_Id);
             UserResults = DB.GetUserTestResults(User.User_Id);
             AdminId = adminId;
             DialogText = DialogTxt;
@@ -51,8 +56,6 @@ namespace BlueFoxTests_Oracle.Windows
             {
                 AdminTabItem.Content = "Only For Admins";
             }
-
-            //ThemesTab.Children.Add(new UserControls.ThemesUserControl(this));
         }
 
         // Can execute

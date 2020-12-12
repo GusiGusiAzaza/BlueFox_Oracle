@@ -104,17 +104,6 @@
                              Grid.ColumnSpan="4">
                 <dragablz:TabablzControl x:Name="MainTabControl"
                                          Style="{DynamicResource MaterialDesignTabablzControlStyle}">
-                    <!--<TabItem>
-                        <TabItem.Header>
-                            <TextBlock Text="HOME" FontWeight="Medium" HorizontalAlignment="Stretch"
-                                       TextAlignment="Center"
-                                       Width="{Binding ElementName=SizingPanel, Path=ActualWidth, Mode=OneWay}" />
-                        </TabItem.Header>
-                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
-                                      CanContentScroll="False">
-                            <userControls:HomeUserControl />
-                        </ScrollViewer>
-                    </TabItem>-->
                     <TabItem>
                         <TabItem.Header>
                             <TextBlock Text="TESTS" FontWeight="Medium" HorizontalAlignment="Stretch"
@@ -124,8 +113,7 @@
 
                         <dragablz:TabablzControl Style="{DynamicResource MaterialDesignTabablzControlStyle}">
                             <TabItem Header="Tests">
-                                <ScrollViewer VerticalScrollBarVisibility="Auto"
-                                              HorizontalScrollBarVisibility="Disabled" CanContentScroll="False">
+                                <ScrollViewer >
                                     <userControls:TestsUserControl/>
                                 </ScrollViewer>
                             </TabItem>
@@ -162,15 +150,6 @@
                                     <userControls:AdminCreateTestControl />
                                 </ScrollViewer>
                             </TabItem>
-
-                            <TabItem Header="New Home Page" >
-                                <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Margin="30" Width="1000">
-                                    <TextBox x:Name="url" Style="{DynamicResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Site URL" FontSize="25"></TextBox>
-                                    <Button Style="{DynamicResource MaterialDesignFlatMidBgButton}" Height="50" Content="Add Site" HorizontalAlignment="Right" 
-                                            Click="AddUri_Click"></Button>
-                                </Grid>
-                            </TabItem>
-
                         </dragablz:TabablzControl>
                     </TabItem>
                 </dragablz:TabablzControl>
@@ -188,7 +167,7 @@
         </Button>
         <!--Bottom Settings Icon Button-->
 
-        <controls:Flyout x:Name="LeftFlyout" Position="Right" Header="Settings"
+        <controls:Flyout x:Name="LeftFlyout" Position="Right" Header="Settings" Width="500px"
                          materialDesign:FlyoutAssist.HeaderColorMode="PrimaryDark" Panel.ZIndex="100"
                          Grid.Row="1" Grid.Column="4" Grid.RowSpan="5">
             <Grid Margin="24">

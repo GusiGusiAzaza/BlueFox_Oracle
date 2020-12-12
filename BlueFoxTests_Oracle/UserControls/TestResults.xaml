@@ -7,9 +7,25 @@
              FontSize="25"
              FontFamily="../Resources/Decorations/Fonts/#Mark" FontWeight="Normal"
              Height="Auto" Width="1000">
-    <StackPanel>
-        <TextBlock x:Name="TestResultsTb" Text="Test Results" Style="{DynamicResource MaterialDesignHeadline3TextBlock}"
-                   HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="DeepSkyBlue" />
+    <StackPanel Name="ResultsPanel">
+        <Grid Width="1000" Background="#7A7A7A" Height="100">
+            <TextBlock x:Name="TestResultsTb" Text="Test Results" Style="{DynamicResource MaterialDesignHeadline3TextBlock}" Padding="20 0"
+                       Background="#7A7A7A" Foreground="White"/>
+            <TextBlock x:Name="tbTestName" FontSize="25" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="White"
+                       Margin="0 0 420 10" Padding="20 0" Visibility="Visible" Text="English Easy Test"/>
+            <Grid Name="ResStats">
+                <TextBlock x:Name="tbRightAnsweredCounter" FontSize="25" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="GreenYellow"
+                           Margin="0 10 230 0" Visibility="Visible" Text="Right: 00/00"/>
+                <TextBlock x:Name="tbTimeSpent" FontSize="25" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="GreenYellow"
+                           Margin="0 10 20 0" Visibility="Visible" Text="Time: 00:00:00"/>
+                <TextBlock x:Name="tbScore" FontSize="25" HorizontalAlignment="Center" VerticalAlignment="Top" Foreground="GreenYellow"
+                           Margin="0 10 0 0" Visibility="Visible" Text="Score: 100%"/>
+                <TextBlock x:Name="tbPassScore" FontSize="25" HorizontalAlignment="Center" VerticalAlignment="Top" Foreground="GreenYellow"
+                           Margin="0 55 0 0" Visibility="Visible" Text="Pass score: 100%"/>
+                <TextBlock x:Name="tbPassed" FontSize="25" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="GreenYellow"
+                           Margin="0 55 230 0" Visibility="Visible" Text="Passed: yes"/>
+            </Grid>
+        </Grid>
         <StackPanel x:Name="QuestionsGrid" Height="Auto" Margin="0 30">
 
         </StackPanel>

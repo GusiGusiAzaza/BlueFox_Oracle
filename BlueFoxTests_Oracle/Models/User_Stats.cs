@@ -13,7 +13,7 @@ namespace BlueFoxTests_Oracle.Models
 
         public int? Total_Answered { get; set; }
 
-        public float? Avg_Score { get; set; }
+        public double? Avg_Score { get; set; }
 
         public int? Finished_Tests_Count { get; set; }
 

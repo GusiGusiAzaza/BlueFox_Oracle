@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace BlueFoxTests_Oracle.Models
@@ -15,8 +14,8 @@ namespace BlueFoxTests_Oracle.Models
         [StringLength(15)]
         public string Password_Hash { get; set; }
 
-        public virtual User_Info User_Info { get; set; }
+        public User_Info User_Info { get; set; }
 
-        public virtual User_Stats User_Stats { get; set; }
+        public User_Stats User_Stats { get; set; }
     }
 }

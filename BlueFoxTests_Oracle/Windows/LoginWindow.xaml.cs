@@ -10,8 +10,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using BlueFoxTests_Oracle.Components;
 using BlueFoxTests_Oracle.Models;
-using MaterialDesignThemes.Wpf;
-using Oracle.ManagedDataAccess.Client;
 
 namespace BlueFoxTests_Oracle.Windows
 {
@@ -85,7 +83,6 @@ namespace BlueFoxTests_Oracle.Windows
                     .ToBase64String(md5.ComputeHash(Encoding.UTF8.GetBytes(PasswordBox.Password)))
                     .Substring(0, 15);
 
-                //User user = DB.GetUserByUsername(UsernameTextBox.Text);
                 User user = DB.CheckUserLogin(UsernameTextBox.Text, hash);
 
                 if (user != null)
@@ -117,9 +114,7 @@ namespace BlueFoxTests_Oracle.Windows
 
         private void CantSignInButton_Click(object sender, RoutedEventArgs e)
         {
-            MD5 md5 = new MD5CryptoServiceProvider();
-
-            // DB.CreateSynonymsForProcs();
+            //MD5 md5 = new MD5CryptoServiceProvider();
 
             //string name;
             //string password;
@@ -133,12 +128,12 @@ namespace BlueFoxTests_Oracle.Windows
             //    DB.AddUser(new User
             //    {
             //        Username = name,
-            //        PasswordHash = hash
+            //        Password_Hash = hash
             //    });
             //}
 
             //string th_name;
-            //for (int i = 11; i < 30; i++)
+            //for (int i = 1; i < 100; i++)
             //{
             //    th_name = $"Theme{i}";
             //    DB.AddTheme(new Models.Theme
@@ -148,16 +143,17 @@ namespace BlueFoxTests_Oracle.Windows
             //}
 
             //string t_name;
-            //for (int i = 11; i < 30; i++)
+            //for (int i = 1; i < 100; i++)
             //{
             //    t_name = $"Test{i}";
             //    DB.AddTest(new Test
             //    {
-            //        Theme_Id = 121,
-            //        Admin_Id = 41,
+            //        Theme_Id = 3,
+            //        Admin_Id = 1,
             //        Test_Name = t_name,
             //        Time_Limit_In_Minutes = 10,
-            //        Passing_Score = 50
+            //        Passing_Score = 50,
+            //        Is_Enabled = true
             //    });
             //}
 

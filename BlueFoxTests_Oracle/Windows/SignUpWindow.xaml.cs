@@ -112,7 +112,7 @@ namespace BlueFoxTests_Oracle.Windows
         {
             try
             {
-                using var conn = new OracleConnection(Config.ConnectionString);
+                using var conn = new OracleConnection(Config.AdminConnectionString);
                 await conn.OpenAsync();
                 MD5 md5 = new MD5CryptoServiceProvider();
                 User newUser = new User
@@ -123,7 +123,7 @@ namespace BlueFoxTests_Oracle.Windows
                 };
 
                 DB.AddUser(newUser);
-                DB.InitUserInfoAndStats(DB.GetUserByUsername(newUser.Username).User_Id);
+                //DB.InitUserInfoAndStats(DB.GetUserByUsername(newUser.Username).User_Id);
 
                 Logger.Log.Info($"Successfully registered new user \"{newUser.Username}\"(id: {newUser.User_Id}) to database");
 

@@ -1,5 +1,8 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Windows.Documents;
 
 namespace BlueFoxTests_Oracle.Models
 {
@@ -14,7 +17,7 @@ namespace BlueFoxTests_Oracle.Models
 
         public int Try_Count { get; set; }
 
-        public float Score { get; set; }
+        public double Score { get; set; }
 
         public bool Is_Passed { get; set; }
 
@@ -26,6 +29,6 @@ namespace BlueFoxTests_Oracle.Models
 
         public DateTime? End_Date { get; set; }
 
-        public Test Test { get; set; }
+        public List<User_Answers> UserAnswers { get; set; }
     }
 }

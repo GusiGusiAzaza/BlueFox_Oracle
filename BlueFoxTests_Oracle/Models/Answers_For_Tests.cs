@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BlueFoxTests_Oracle.Models
 {
-    public partial class Answers_For_Tests
+    public class Answers_For_Tests
     {
         [Key]
         public int Answer_Id { get; set; }
@@ -13,7 +13,5 @@ namespace BlueFoxTests_Oracle.Models
         public bool Is_Right { get; set; }
 
         public int? Question_Id { get; set; }
-
-        public virtual Questions_For_Tests Questions_For_Tests { get; set; }
     }
 }

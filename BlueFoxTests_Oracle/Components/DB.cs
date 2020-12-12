@@ -11,7 +11,7 @@ namespace BlueFoxTests_Oracle.Components
     {
         static DB()
         {
-            Conn = new OracleConnection(Config.ConnectionString);
+            Conn = new OracleConnection(Config.AdminConnectionString);
             Conn.OpenAsync();
         }
 
@@ -21,29 +21,6 @@ namespace BlueFoxTests_Oracle.Components
         {
             Logger.Log.Info("DB has been initialized.");
         }
-
-        //public static void CreateSynonymsForProcs()
-        //{
-        //    string sql = "";
-        //    var getSyns = new OracleCommand
-        //    {
-        //        Connection = Conn,
-        //        CommandText = "CREATE_SYNONS",
-        //        CommandType = CommandType.StoredProcedure
-        //    };
-
-        //    OracleCommand cmd = new OracleCommand();
-        //    cmd.Connection = Conn;
-
-        //    var reader = getSyns.ExecuteReader();
-        //    while (reader.Read())
-        //    {
-        //        //sql = $"create synonym {reader["OBJECT_NAME"]} for system.{reader["OBJECT_NAME"]};";
-        //        sql = $"create synonym GET_USERS for system.GET_USERS;";
-        //        cmd.CommandText = sql;
-        //        cmd.ExecuteNonQuery();
-        //    }
-        //}
 
         public static User GetUserById(int id)
         {
@@ -130,32 +107,32 @@ namespace BlueFoxTests_Oracle.Components
 
         public static bool UserExists(int id)
         {
-            var userExists = new OracleCommand
+            var userExistsCmd = new OracleCommand
             {
                 Connection = Conn,
                 CommandText = "USER_EXISTS",
                 CommandType = CommandType.StoredProcedure
             };
-            userExists.Parameters.Add("return_value", OracleDbType.Decimal).Direction =
+            userExistsCmd.Parameters.Add("return_value", OracleDbType.Decimal).Direction =
                 ParameterDirection.ReturnValue;
-            userExists.Parameters.Add("usrname", OracleDbType.Decimal).Value = id;
-            userExists.ExecuteNonQuery();
-            return userExists.Parameters["return_value"].Value.ToString() == "1";
+            userExistsCmd.Parameters.Add("usrname", OracleDbType.Decimal).Value = id;
+            userExistsCmd.ExecuteNonQuery();
+            return userExistsCmd.Parameters["return_value"].Value.ToString() == "1";
         }
 
         public static bool UserExistsByUsername(string username)
         {
-            var userExists = new OracleCommand
+            var userExistsCmd = new OracleCommand
             {
                 Connection = Conn,
                 CommandText = "USER_EXISTS_USERNAME",
                 CommandType = CommandType.StoredProcedure
             };
-            userExists.Parameters.Add("return_value", OracleDbType.Decimal).Direction =
+            userExistsCmd.Parameters.Add("return_value", OracleDbType.Decimal).Direction =
                 ParameterDirection.ReturnValue;
-            userExists.Parameters.Add("usrname", OracleDbType.NVarchar2).Value = username;
-            userExists.ExecuteNonQuery();
-            return userExists.Parameters["return_value"].Value.ToString() == "1";
+            userExistsCmd.Parameters.Add("usrname", OracleDbType.NVarchar2).Value = username;
+            userExistsCmd.ExecuteNonQuery();
+            return userExistsCmd.Parameters["return_value"].Value.ToString() == "1";
         }
 
         public static async void AddUser(User newUser)
@@ -171,29 +148,17 @@ namespace BlueFoxTests_Oracle.Components
             await addUserCmd.ExecuteNonQueryAsync();
         }
 
-        public static async void InitUserInfoAndStats(int id)
-        {
-            var initUserInfoAndStatsCmd = new OracleCommand
-            {
-                Connection = Conn,
-                CommandText = "INITIALIZE_USER_INFO_AND_STATS",
-                CommandType = CommandType.StoredProcedure
-            };
-            initUserInfoAndStatsCmd.Parameters.Add("u_id", OracleDbType.Decimal).Value = id;
-            await initUserInfoAndStatsCmd.ExecuteNonQueryAsync();
-        }
-
-        public static User_Info GetUserInfo(int id)
+        public static User_Info GetUserInfo(int userId)
         {
             User_Info userInfo = null;
-            var getUserInfo = new OracleCommand
+            var getUserInfoCmd = new OracleCommand
             {
                 Connection = Conn,
                 CommandText = "GET_USER_INFO",
                 CommandType = CommandType.StoredProcedure
             };
-            getUserInfo.Parameters.Add("u_id", OracleDbType.Decimal).Value = id;
-            var reader = getUserInfo.ExecuteReader();
+            getUserInfoCmd.Parameters.Add("u_id", OracleDbType.Decimal).Value = userId;
+            var reader = getUserInfoCmd.ExecuteReader();
             while (reader.Read())
                 userInfo = new User_Info
                 {
@@ -209,6 +174,30 @@ namespace BlueFoxTests_Oracle.Components
             return userInfo;
         }
 
+        public static User_Stats GetUserStats(int userId)
+        {
+            User_Stats userStats = null;
+            var getUserStatsCmd = new OracleCommand
+            {
+                Connection = Conn,
+                CommandText = "GET_USER_STATS",
+                CommandType = CommandType.StoredProcedure
+            };
+            getUserStatsCmd.Parameters.Add("u_id", OracleDbType.Decimal).Value = userId;
+            var reader = getUserStatsCmd.ExecuteReader();
+            while (reader.Read())
+                userStats = new User_Stats
+                {
+                    Total_Answered = int.Parse(reader["total_answered"].ToString()),
+                    Right_Answered = int.Parse(reader["right_answered"].ToString()),
+                    Avg_Score = double.Parse(reader["avg_score"].ToString()),
+                    Finished_Tests_Count = int.Parse(reader["finished_tests_count"].ToString()),
+                    Passed_Tests_Count = int.Parse(reader["passed_tests_count"].ToString()),
+                };
+
+            return userStats;
+        }
+
         public static List<Test_Result> GetUserTestResults(int userId)
         {
             var results = new List<Test_Result>();
@@ -221,6 +210,8 @@ namespace BlueFoxTests_Oracle.Components
             getUserTestResultsCmd.Parameters.Add("u_id", OracleDbType.Decimal).Value = userId;
             var reader = getUserTestResultsCmd.ExecuteReader();
             while (reader.Read())
+            {
+                var endDate = reader["end_date"].ToString();
                 results.Add(new Test_Result
                 {
                     Result_Id = int.Parse(reader["result_id"].ToString()),
@@ -228,12 +219,13 @@ namespace BlueFoxTests_Oracle.Components
                     Test_Id = int.Parse(reader["test_id"].ToString()),
                     Try_Count = int.Parse(reader["try_count"].ToString()),
                     Is_Passed = reader["is_passed"].ToString() != "0",
-                    Score = int.Parse(reader["score"].ToString()),
+                    Score = double.Parse(reader["score"].ToString()),
                     Right_Answers_Count = int.Parse(reader["right_answers_count"].ToString()),
                     Questions_Count = int.Parse(reader["questions_count"].ToString()),
                     Start_Date = DateTime.Parse(reader["start_date"].ToString()),
-                    End_Date = DateTime.Parse(reader["end_date"].ToString())
+                    End_Date = !string.IsNullOrEmpty(endDate) ? DateTime.Parse(reader["end_date"].ToString()) : DateTime.MinValue
                 });
+            }
 
             return results;
         }
@@ -330,7 +322,8 @@ namespace BlueFoxTests_Oracle.Components
                     Test_Name = reader["test_name"].ToString(),
                     Theme_Id = int.Parse(reader["theme_id"].ToString()),
                     Time_Limit_In_Minutes = int.Parse(reader["time_limit_in_minutes"].ToString()),
-                    Passing_Score = int.Parse(reader["passing_score"].ToString())
+                    Passing_Score = int.Parse(reader["passing_score"].ToString()),
+                    Is_Enabled = int.Parse(reader["is_enabled"].ToString()) == 1,
                 });
 
             return tests;
@@ -356,7 +349,8 @@ namespace BlueFoxTests_Oracle.Components
                         Test_Name = reader["test_name"].ToString(),
                         Theme_Id = int.Parse(reader["theme_id"].ToString()),
                         Time_Limit_In_Minutes = int.Parse(reader["time_limit_in_minutes"].ToString()),
-                        Passing_Score = int.Parse(reader["passing_score"].ToString())
+                        Passing_Score = int.Parse(reader["passing_score"].ToString()),
+                        Is_Enabled = int.Parse(reader["is_enabled"].ToString()) == 1,
                     };
 
             return test;
@@ -409,6 +403,28 @@ namespace BlueFoxTests_Oracle.Components
             return answers;
         }
 
+        public static List<User_Answers> GetUserAnswersByResultId(int resultId)
+        {
+            var userAnswers = new List<User_Answers>();
+            var getUserAnswersByResIdCmd = new OracleCommand
+            {
+                Connection = Conn,
+                CommandText = "GET_USER_ANSWERS_BY_RESULT_ID",
+                CommandType = CommandType.StoredProcedure
+            };
+            getUserAnswersByResIdCmd.Parameters.Add("res_id", OracleDbType.Decimal).Value = resultId;
+            var reader = getUserAnswersByResIdCmd.ExecuteReader();
+            while (reader.Read())
+                userAnswers.Add(new User_Answers
+                {
+                    Result_Id = int.Parse(reader["result_id"].ToString()),
+                    Question_Id = int.Parse(reader["question_id"].ToString()),
+                    User_Answer = int.Parse(reader["user_answer"].ToString())
+                });
+
+            return userAnswers;
+        }
+
         public static async void AddTest(Test newTest)
         {
             var addTestCmd = new OracleCommand
@@ -422,6 +438,7 @@ namespace BlueFoxTests_Oracle.Components
             addTestCmd.Parameters.Add("th_id", OracleDbType.Decimal).Value = newTest.Theme_Id;
             addTestCmd.Parameters.Add("time_limit", OracleDbType.Decimal).Value = newTest.Time_Limit_In_Minutes;
             addTestCmd.Parameters.Add("pass_score", OracleDbType.Decimal).Value = newTest.Passing_Score;
+            addTestCmd.Parameters.Add("is_enable", OracleDbType.Decimal).Value = newTest.Is_Enabled ? 1 : 0;
             await addTestCmd.ExecuteNonQueryAsync();
         }
 
@@ -453,20 +470,51 @@ namespace BlueFoxTests_Oracle.Components
             await addAnswerCmd.ExecuteNonQueryAsync();
         }
 
-        public static async void InitTestResult(int userId, int testId, int qCount, int tryCount, DateTime startDate)
+        public static async void AddUserAnswer(User_Answers userAnswer)
+        {
+            var addAnswerCmd = new OracleCommand
+            {
+                Connection = Conn,
+                CommandText = "ADD_USER_ANSWER",
+                CommandType = CommandType.StoredProcedure
+            };
+            addAnswerCmd.Parameters.Add("res_id", OracleDbType.Decimal).Value = userAnswer.Result_Id;
+            addAnswerCmd.Parameters.Add("q_id", OracleDbType.Decimal).Value = userAnswer.Question_Id;
+            addAnswerCmd.Parameters.Add("u_answ", OracleDbType.Decimal).Value = userAnswer.User_Answer;
+            await addAnswerCmd.ExecuteNonQueryAsync();
+        }
+
+        public static async void EnableTest(int testId, bool isEnabled)
+        {
+            var enableTestCmd = new OracleCommand
+            {
+                Connection = Conn,
+                CommandText = "ENABLE_TEST",
+                CommandType = CommandType.StoredProcedure
+            };
+            enableTestCmd.Parameters.Add("t_id", OracleDbType.Decimal).Value = testId;
+            enableTestCmd.Parameters.Add("is_enable", OracleDbType.Decimal).Value = isEnabled ? 1 : 0;
+            await enableTestCmd.ExecuteNonQueryAsync();
+        }
+
+        public static int InitTestResult(Test_Result testResult)
         {
             var initTestResultCmd = new OracleCommand
             {
                 Connection = Conn,
-                CommandText = "INITIALIZE_TEST_RESULT",
+                CommandText = "FUNC_INITIALIZE_TEST_RESULT",
                 CommandType = CommandType.StoredProcedure
             };
-            initTestResultCmd.Parameters.Add("u_id", OracleDbType.Decimal).Value = userId;
-            initTestResultCmd.Parameters.Add("t_id", OracleDbType.Decimal).Value = testId;
-            initTestResultCmd.Parameters.Add("try_c", OracleDbType.Decimal).Value = testId;
-            initTestResultCmd.Parameters.Add("q_count", OracleDbType.Decimal).Value = qCount;
-            initTestResultCmd.Parameters.Add("st_date", OracleDbType.Date).Value = startDate;
-            await initTestResultCmd.ExecuteNonQueryAsync();
+            initTestResultCmd.Parameters.Add("return_value", OracleDbType.Decimal).Direction =
+                ParameterDirection.ReturnValue;
+            initTestResultCmd.Parameters.Add("u_id", OracleDbType.Decimal).Value = testResult.User_Id;
+            initTestResultCmd.Parameters.Add("t_id", OracleDbType.Decimal).Value = testResult.Test_Id;
+            initTestResultCmd.Parameters.Add("try_c", OracleDbType.Decimal).Value = testResult.Try_Count;
+            initTestResultCmd.Parameters.Add("q_count", OracleDbType.Decimal).Value = testResult.Questions_Count;
+            initTestResultCmd.Parameters.Add("st_date", OracleDbType.Date).Value = testResult.Start_Date;
+            initTestResultCmd.ExecuteNonQuery();
+
+            return int.Parse(initTestResultCmd.Parameters["return_value"].Value.ToString());
         }
 
         public static async void UpdateTestResultOnFinish(Test_Result testResult)
@@ -474,7 +522,7 @@ namespace BlueFoxTests_Oracle.Components
             var updateTestResultCmd = new OracleCommand
             {
                 Connection = Conn,
-                CommandText = "UPDATE_TEST_RESULT",
+                CommandText = "UPDATE_TEST_RESULT_TEST_END",
                 CommandType = CommandType.StoredProcedure
             };
             updateTestResultCmd.Parameters.Add("res_id", OracleDbType.Decimal).Value = testResult.Result_Id;

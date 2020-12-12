@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using BlueFoxTests_Oracle.Components;
 using BlueFoxTests_Oracle.Models;
 using BlueFoxTests_Oracle.Windows;
@@ -36,6 +37,7 @@ namespace BlueFoxTests_Oracle.UserControls
         private string _selectedQuestionn = Empty;
         private string _selectedTest = Empty;
         private Theme _selectedTheme = new Theme();
+        private Test _selTest = new Test();
 
         public AdminCreateTestControl()
         {
@@ -106,7 +108,9 @@ namespace BlueFoxTests_Oracle.UserControls
                 _tests = DB.GetTestsByThemeId(_selectedTheme.Theme_Id);
                 foreach (var test in _tests)
                 {
-                    var testsViewItem = new ListViewItem {Content = test.Test_Name};
+                    var testsViewItem = test.Is_Enabled ? new ListViewItem {Content = test.Test_Name, Background = Brushes.ForestGreen, Foreground = Brushes.White} 
+                        : new ListViewItem { Content = test.Test_Name, Background = Brushes.DarkRed, Foreground = Brushes.White };
+
                     listTests.Items.Add(testsViewItem);
                 }
 
@@ -117,6 +121,24 @@ namespace BlueFoxTests_Oracle.UserControls
             {
                 MessageBox.Show(exception.Message, "Error");
                 Logger.Log.Error(exception);
+            }
+        }
+
+        private void btnEnable_Click(object sender, RoutedEventArgs e)
+        {
+            if (tbEnableTest.Text == "Enable test")
+            {
+                DB.EnableTest(_selTest.Test_Id, true);
+                tbEnableTest.Text = "Disable test";
+                btnEnableTest.Background = Brushes.DarkRed;
+                NewTheme_Selected(sender, e);
+            }
+            else if (tbEnableTest.Text == "Disable test")
+            {
+                DB.EnableTest(_selTest.Test_Id, false);
+                tbEnableTest.Text = "Enable test";
+                btnEnableTest.Background = Brushes.ForestGreen;
+                NewTheme_Selected(sender, e);
             }
         }
 
@@ -133,7 +155,18 @@ namespace BlueFoxTests_Oracle.UserControls
                     AnswersPanel.IsEnabled = true;
 
                     var currentTest = _tests.FirstOrDefault(t => t.Test_Name == _selectedTest);
+                    _selTest = currentTest;
                     if (currentTest == null) return;
+                    if (currentTest.Is_Enabled)
+                    {
+                        tbEnableTest.Text = "Disable test";
+                        btnEnableTest.Background = Brushes.DarkRed;
+                    }
+                    else
+                    {
+                        tbEnableTest.Text = "Enable test";
+                        btnEnableTest.Background = Brushes.ForestGreen;
+                    }
                     _questions = DB.GetQuestionsByTestId(currentTest.Test_Id);
                     foreach (var question in _questions)
                     {
