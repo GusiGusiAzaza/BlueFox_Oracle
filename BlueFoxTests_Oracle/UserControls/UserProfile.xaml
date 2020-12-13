@@ -7,7 +7,7 @@
              mc:Ignorable="d"              
              FontFamily="../Resources/Decorations/Fonts/#Mark" FontWeight="Normal"
              Height="Auto" Width="1000">
-    <Grid Name="MainGrid">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="100" />
             <RowDefinition />
@@ -38,11 +38,7 @@
                         <ComboBoxItem Content="Male"/>
                         <ComboBoxItem Content="Female"/>
                         <ComboBoxItem Content="Uncertain"/>
-                        <ComboBoxItem Content="Gay"/>
-                        <ComboBoxItem Content="Lesbian"/>
-                        <ComboBoxItem Content="Transgender"/>
                         <ComboBoxItem Content="Asexual"/>
-                        <ComboBoxItem Content="Jesus there are so many genders, I'm just a human..."/>
                     </ComboBox>
                 </Grid>
                 <Grid Margin="0 5">

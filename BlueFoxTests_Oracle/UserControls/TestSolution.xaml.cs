@@ -259,6 +259,8 @@ namespace BlueFoxTests_Oracle.UserControls
                 VerticalAlignment = VerticalAlignment.Bottom,
                 Text = $"{Math.Round(_testResult.Score, 1)}% is correct"
             });
+            MainWindow.User.User_Stats = DB.GetUserStats(MainWindow.User.User_Id);
+            UserStatsControl.UpdateStats();
         }
 
         public static void Shuffle<T>(IList<T> list)

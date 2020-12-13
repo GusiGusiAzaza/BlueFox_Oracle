@@ -167,10 +167,11 @@
         </Button>
         <!--Bottom Settings Icon Button-->
 
-        <controls:Flyout x:Name="LeftFlyout" Position="Right" Header="Settings" Width="500px"
-                         materialDesign:FlyoutAssist.HeaderColorMode="PrimaryDark" Panel.ZIndex="100"
-                         Grid.Row="1" Grid.Column="4" Grid.RowSpan="5">
+        <controls:Flyout x:Name="LeftFlyout" Position="Right" Header="Settings" Width="350px"
+                         materialDesign:FlyoutAssist.HeaderColorMode="PrimaryDark" Panel.ZIndex="1000"
+                         Grid.Row="1" Grid.Column="3" Grid.RowSpan="5" Grid.ColumnSpan="2">
             <Grid Margin="24">
+                <userControls:UserStatsControl/>
                 <userControls:MainWindowFlyout HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0 60">
                     <userControls:MainWindowFlyout.DataContext>
                         <vMs:MainWindowFlyoutViewModel />

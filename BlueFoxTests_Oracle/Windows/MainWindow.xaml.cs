@@ -24,16 +24,17 @@ namespace BlueFoxTests_Oracle.Windows
         public static DialogHost Dialog;
         public static Grid Grid;
         public static TextBlock DialogText;
-        //public static User User = DB.GetUserById(1);
-        public static User User;
-        //public static List<Test_Result> UserResults = DB.GetUserTestResults(1);
-        public static List<Test_Result> UserResults;
+        public static User User = DB.GetUserById(1);
+        //public static User User;
+        public static List<Test_Result> UserResults = DB.GetUserTestResults(1);
+        //public static List<Test_Result> UserResults;
         public static int AdminId;
 
         public MainWindow()
         {
             DB.Initialize();
             InitializeComponent();
+            User.User_Stats = DB.GetUserStats(User.User_Id);
             AdminId = DB.IsAdmin(1);
             Grid = MainGrid;
             Snackbar = MainSnackbar;
@@ -44,8 +45,8 @@ namespace BlueFoxTests_Oracle.Windows
         public MainWindow(User user, int adminId)
         {
             User = user;
-            InitializeComponent();
             User.User_Stats = DB.GetUserStats(User.User_Id);
+            InitializeComponent();
             UserResults = DB.GetUserTestResults(User.User_Id);
             AdminId = adminId;
             DialogText = DialogTxt;
@@ -105,25 +106,6 @@ namespace BlueFoxTests_Oracle.Windows
             LoginWindow loginWindow = new LoginWindow();
             loginWindow.Show();
             Close();
-        }
-
-        private void AddUri_Click(object sender, EventArgs e)
-        {
-            bool result = Uri.TryCreate(url.Text, UriKind.Absolute, out var uriResult)
-                          && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
-
-            if (result)
-            {
-                using BlueFoxContext db = new BlueFoxContext();
-                HomeWebPage page = new HomeWebPage() { WebPage_URL = url.Text };
-                db.HomeWebPages.Add(page);
-                db.SaveChanges();
-                MessageBox.Show("Uri Saved", "Info");
-            }
-            else
-            {
-                MessageBox.Show("Incorrect URI", "Warning");
-            }
         }
 
         public void EnableGrid(object sender, RoutedEventArgs e)

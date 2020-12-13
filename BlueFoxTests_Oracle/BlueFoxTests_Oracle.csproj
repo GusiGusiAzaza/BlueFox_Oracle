@@ -155,6 +155,9 @@
     <Compile Include="UserControls\UserProfile.xaml.cs">
       <DependentUpon>UserProfile.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\UserStatsControl.xaml.cs">
+      <DependentUpon>UserStatsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="VMs\AnotherCommandImplementation.cs" />
     <Compile Include="VMs\MainWindowFlyoutViewModel.cs" />
     <Compile Include="VMs\PaletteSelectorViewModel.cs" />
@@ -224,6 +227,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\UserProfile.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\UserStatsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
