@@ -114,7 +114,6 @@ namespace BlueFoxTests_Oracle.Windows
 
         private void CantSignInButton_Click(object sender, RoutedEventArgs e)
         {
-            BdGenerate();
             LoginWarningLabel.Foreground = new SolidColorBrush(Color.FromRgb(255, 0, 0));
             LoginWarningLabel.Text = (string)TryFindResource("login_ForgotPasswordWarning");
             LoginWarningLabel.Visibility = Visibility.Visible;

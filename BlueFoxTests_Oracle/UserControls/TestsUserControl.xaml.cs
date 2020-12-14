@@ -23,7 +23,6 @@ namespace BlueFoxTests_Oracle.UserControls
         public static WrapPanel _testsWrapPanel;
         public static bool TestIsGoing;
         public static Test OnGoingTest = new Test();
-        private readonly TestSolution _testSolution;
         private Test _currentTest;
         private Theme _currentTheme;
         private List<Test> _tests;

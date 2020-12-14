@@ -29,6 +29,13 @@ namespace BlueFoxTests_Oracle.Components
             Conn.OpenAsync();
         }
 
+        public static void OpenAdminConnection()
+        {
+            Conn.Close();
+            Conn = new OracleConnection(Config.AdminConnectionString);
+            Conn.OpenAsync();
+        }
+
         public static User GetUserById(int id)
         {
             User user = null;
@@ -362,7 +369,6 @@ namespace BlueFoxTests_Oracle.Components
 
             return test;
         }
-
 
         public static List<Questions_For_Tests> GetQuestionsByTestId(int testId)
         {

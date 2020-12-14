@@ -1,17 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Forms.VisualStyles;
 using System.Windows.Input;
-using System.Windows.Media;
 using BlueFoxTests_Oracle.Components;
 using BlueFoxTests_Oracle.Models;
-using BlueFoxTests_Oracle.UserControls;
 using MahApps.Metro.Controls;
 using MaterialDesignThemes.Wpf;
-using VerticalAlignment = System.Windows.VerticalAlignment;
 
 namespace BlueFoxTests_Oracle.Windows
 {
@@ -24,10 +19,8 @@ namespace BlueFoxTests_Oracle.Windows
         public static DialogHost Dialog;
         public static Grid Grid;
         public static TextBlock DialogText;
-        public static User User = DB.GetUserById(1);
-        //public static User User;
-        public static List<Test_Result> UserResults = DB.GetUserTestResults(1);
-        //public static List<Test_Result> UserResults;
+        public static User User;
+        public static List<Test_Result> UserResults;
         public static int AdminId;
 
         public MainWindow()
@@ -44,7 +37,7 @@ namespace BlueFoxTests_Oracle.Windows
 
         public MainWindow(User user, int adminId)
         {
-            //if(adminId == 0) DB.OpenUserConnection();
+            if(adminId == 0) DB.OpenUserConnection();
             User = user;
             User.User_Stats = DB.GetUserStats(User.User_Id);
             InitializeComponent();
@@ -106,6 +99,7 @@ namespace BlueFoxTests_Oracle.Windows
         {
             LoginWindow loginWindow = new LoginWindow();
             loginWindow.Show();
+            DB.OpenAdminConnection();
             Close();
         }
 

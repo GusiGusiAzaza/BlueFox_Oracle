@@ -70,7 +70,7 @@
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                     <Image Source="../Resources/Icons/BlueFoxLogoNoLabel.png" Margin="2" HorizontalAlignment="Left"
                            VerticalAlignment="Center" />
-                    <TextBlock Text="Blue fox tests" Margin="5 3 0 0" FontSize="15" Foreground="Black" />
+                    <TextBlock Text="Blue Fox Tests" Margin="5 3 0 0" FontSize="15" Foreground="Black" />
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">

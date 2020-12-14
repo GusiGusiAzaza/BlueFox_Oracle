@@ -122,9 +122,6 @@
     <Compile Include="UserControls\AdminCreateTestControl.xaml.cs">
       <DependentUpon>AdminCreateTestControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\HomeUserControl.xaml.cs">
-      <DependentUpon>HomeUserControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="UserControls\MainWindowFlyout.xaml.cs">
       <DependentUpon>MainWindowFlyout.xaml</DependentUpon>
     </Compile>
@@ -187,10 +184,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\AdminCreateTestControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UserControls\HomeUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
