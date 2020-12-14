@@ -8,6 +8,7 @@ namespace BlueFoxTests_Oracle.Components
 {
     public class Config
     {
-        public const string AdminConnectionString = "Data Source=bluefox_oracle;User Id=bluefox_admin;Password=oracle; Pooling=false;";
+        public const string AdminConnectionString = "Data Source=bluefox_oracle;User Id=bluefox_admin;Password=oracle;";
+        public const string UserConnectionString = "Data Source=bluefox_oracle;User Id=bluefox_user;Password=oracle;";
     }
 }

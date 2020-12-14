@@ -52,6 +52,11 @@ namespace BlueFoxTests_Oracle.UserControls
             StartDescription = StartDescriptionTb;
         }
 
+        private void CommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
         private void StartTest(object sender, RoutedEventArgs e)
         {
             StartPanel.Visibility = Visibility.Collapsed;
@@ -220,6 +225,7 @@ namespace BlueFoxTests_Oracle.UserControls
 
                 if (_questionNumber == _questionsCount)
                 {
+                    _timer.Stop();
                     EndTest();
                 }
             }

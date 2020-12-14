@@ -12,21 +12,29 @@
            <ColumnDefinition Width="0.5*"/>
            <ColumnDefinition Width="0.5*"/>
        </Grid.ColumnDefinitions>
-       <TextBlock x:Name="TbThemes" Text="Themes" Grid.Column="0" Style="{DynamicResource MaterialDesignHeadline3TextBlock}"
-                  HorizontalAlignment="Center" VerticalAlignment="Top" Foreground="DeepSkyBlue" />
-       <TextBlock x:Name="TbTests" Text="Tests" Grid.Column="1" Style="{DynamicResource MaterialDesignHeadline3TextBlock}"
-                  HorizontalAlignment="Center" VerticalAlignment="Top" Foreground="DeepSkyBlue" Visibility="Collapsed"/>
 
-        <WrapPanel x:Name="ThemesWrapPanel" Grid.Column="0" HorizontalAlignment="Center" Margin="0 60 0 0">
-       </WrapPanel>
+       <!--<WrapPanel x:Name="ThemesWrapPanel" Grid.Column="0" HorizontalAlignment="Center" Margin="0 60 0 0"/>-->
+        <ScrollViewer Grid.Column="0" HorizontalAlignment="Center">
+            <Grid>
+                <TextBlock x:Name="TbThemes" Text="Themes" Style="{DynamicResource MaterialDesignHeadline3TextBlock}"
+                           HorizontalAlignment="Center" VerticalAlignment="Top" Foreground="DeepSkyBlue" />
+                <WrapPanel x:Name="ThemesWrapPanel" HorizontalAlignment="Center" Margin="0 60 0 0"/>
+            </Grid>
+        </ScrollViewer>
 
         <Separator Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"
                    Width="10px" Margin="0 55 0 10"/>
 
-        <WrapPanel x:Name="TestsWrapPanel" Grid.Column="1" HorizontalAlignment="Center" Margin="0 60 0 0">
-       </WrapPanel>
+        <!--<WrapPanel x:Name="TestsWrapPanel" Grid.Column="1" HorizontalAlignment="Center" Margin="0 60 0 0"/>-->
+       <ScrollViewer Grid.Column="1" HorizontalAlignment="Center">
+            <Grid>
+                <WrapPanel x:Name="TestsWrapPanel" HorizontalAlignment="Center" Margin="0 60 0 0"/>
+                <TextBlock x:Name="TbTests" Text="Tests" Style="{DynamicResource MaterialDesignHeadline3TextBlock}"
+                           HorizontalAlignment="Center" VerticalAlignment="Top" Foreground="DeepSkyBlue" Visibility="Collapsed"/>
+            </Grid>
+       </ScrollViewer>
 
-       <Button x:Name="UpdateButton" Grid.Column="0" Width="40" Height="40"
+        <Button x:Name="UpdateButton" Grid.Column="0" Width="40" Height="40"
                Style="{StaticResource MaterialDesignFloatingActionDarkButton}" Background="Transparent"
                HorizontalAlignment="Left" VerticalAlignment="top" Margin="10" BorderBrush="Transparent"
                Panel.ZIndex="50" Click="ReloadThemes">

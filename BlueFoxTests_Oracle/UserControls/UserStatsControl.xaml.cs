@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using BlueFoxTests_Oracle.Components;
 using BlueFoxTests_Oracle.Models;
 using BlueFoxTests_Oracle.Windows;
 
@@ -42,7 +43,8 @@ namespace BlueFoxTests_Oracle.UserControls
 
         public static void UpdateStats()
         {
-            _userStats = MainWindow.User.User_Stats;
+            //_userStats = MainWindow.User.User_Stats;
+            _userStats = DB.GetUserStats(MainWindow.User.User_Id);
             _tbTotalAnswered.Text = $"Total answered questions: {_userStats.Total_Answered}";
             _tbRightAnswered.Text = $"Correct answered questions: {_userStats.Right_Answered}";
             _tbAvgScore.Text = $"Average score: {_userStats.Avg_Score}%";

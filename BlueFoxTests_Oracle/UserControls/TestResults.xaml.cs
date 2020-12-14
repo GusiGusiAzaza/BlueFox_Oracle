@@ -46,6 +46,7 @@ namespace BlueFoxTests_Oracle.UserControls
                 tbPassScore.Text = $"Pass score: {_test.Passing_Score}%";
                 tbPassed.Text = _result.Is_Passed ? "Passed: Yes" : "Passed: No";
                 tbTimeSpent.Text = $"Time: {timeSpent}";
+                tbStartDate.Text = $"Started on: {_result.Start_Date}";
                 foreach (TextBlock child in ResStats.Children)
                 {
                     child.Foreground = _result.Is_Passed ? Brushes.GreenYellow : Brushes.Red;

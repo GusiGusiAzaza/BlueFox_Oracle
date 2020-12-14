@@ -112,10 +112,13 @@
                         </TabItem.Header>
 
                         <dragablz:TabablzControl Style="{DynamicResource MaterialDesignTabablzControlStyle}">
-                            <TabItem Header="Tests">
+                            <!--<TabItem Header="Tests">
                                 <ScrollViewer >
                                     <userControls:TestsUserControl/>
                                 </ScrollViewer>
+                            </TabItem>-->
+                            <TabItem Header="Tests">
+                                <userControls:TestsUserControl/>
                             </TabItem>
                             <TabItem Header="Solving Test">
                                 <ScrollViewer VerticalScrollBarVisibility="Auto"

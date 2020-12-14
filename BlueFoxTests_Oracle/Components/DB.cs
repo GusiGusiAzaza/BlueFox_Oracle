@@ -15,11 +15,18 @@ namespace BlueFoxTests_Oracle.Components
             Conn.OpenAsync();
         }
 
-        public static OracleConnection Conn { get; }
+        public static OracleConnection Conn { get; set; }
 
         public static void Initialize()
         {
             Logger.Log.Info("DB has been initialized.");
+        }
+
+        public static void OpenUserConnection()
+        {
+            Conn.Close();
+            Conn = new OracleConnection(Config.UserConnectionString);
+            Conn.OpenAsync();
         }
 
         public static User GetUserById(int id)

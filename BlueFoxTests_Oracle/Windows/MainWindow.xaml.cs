@@ -44,6 +44,7 @@ namespace BlueFoxTests_Oracle.Windows
 
         public MainWindow(User user, int adminId)
         {
+            //if(adminId == 0) DB.OpenUserConnection();
             User = user;
             User.User_Stats = DB.GetUserStats(User.User_Id);
             InitializeComponent();

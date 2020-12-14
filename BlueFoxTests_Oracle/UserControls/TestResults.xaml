@@ -16,16 +16,18 @@
             <Grid Name="ResStats">
                 <TextBlock x:Name="tbRightAnsweredCounter" FontSize="25" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="GreenYellow"
                            Margin="0 10 230 0" Visibility="Visible" Text="Right: 00/00"/>
-                <TextBlock x:Name="tbTimeSpent" FontSize="25" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="GreenYellow"
-                           Margin="0 10 20 0" Visibility="Visible" Text="Time: 00:00:00"/>
                 <TextBlock x:Name="tbScore" FontSize="25" HorizontalAlignment="Center" VerticalAlignment="Top" Foreground="GreenYellow"
                            Margin="0 10 0 0" Visibility="Visible" Text="Score: 100%"/>
                 <TextBlock x:Name="tbPassScore" FontSize="25" HorizontalAlignment="Center" VerticalAlignment="Top" Foreground="GreenYellow"
                            Margin="0 55 0 0" Visibility="Visible" Text="Pass score: 100%"/>
                 <TextBlock x:Name="tbPassed" FontSize="25" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="GreenYellow"
                            Margin="0 55 230 0" Visibility="Visible" Text="Passed: yes"/>
+                <TextBlock x:Name="tbTimeSpent" FontSize="25" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="GreenYellow"
+                           Margin="0 10 20 0" Visibility="Visible" Text="Time: 00:00:00"/>
             </Grid>
         </Grid>
+        <TextBlock x:Name="tbStartDate" FontSize="25" HorizontalAlignment="Center" VerticalAlignment="Top"
+                   Margin="0 10 20 0" Visibility="Visible" Text="Started on: 00/00/0000 00:00:00"/>
         <StackPanel x:Name="QuestionsGrid" Height="Auto" Margin="0 30">
 
         </StackPanel>

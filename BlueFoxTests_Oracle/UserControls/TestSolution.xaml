@@ -7,6 +7,11 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.CommandBindings>
+        <CommandBinding Command="{x:Static EditingCommands.EnterParagraphBreak}" CanExecute="CommandBinding_CanExecute"
+                        Executed="NextQuestionButton_Click" />
+    </UserControl.CommandBindings>
     <Grid>
         <StackPanel Name="StartTestPanel" Width="1200" HorizontalAlignment="Center" Margin="0 20" Visibility="Collapsed">
             <TextBlock Name="StartDescriptionTb" Text="Good luck" FontSize="25" Foreground="DeepSkyBlue" TextWrapping="WrapWithOverflow"
@@ -25,7 +30,7 @@
             <TextBlock x:Name="TestName" Text="##Test Name##" Foreground="White" Height="50" VerticalAlignment="Center" 
                        Background="#7A7A7A" FontSize="30" Margin="1" Padding="20 4" />
             <TextBlock x:Name="tbTime" Grid.Row="0" FontSize="20" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="Black"
-                       Margin="0 0 120 2" Visibility="Collapsed" Text="00:00"/>
+                       Margin="0 0 130 2" Visibility="Collapsed" Text="00:00"/>
             <TextBlock x:Name="tbQuestionCounter" Grid.Row="0" FontSize="20" HorizontalAlignment="Right" VerticalAlignment="Center"
                        Margin="0 0 60 2" Visibility="Collapsed" Text="00/00"/>
             <materialDesign:PackIcon x:Name="AnswerCorrectIcon" Foreground="Transparent" Kind="Adjust" Grid.Row="0" Width="25" Height="25" 

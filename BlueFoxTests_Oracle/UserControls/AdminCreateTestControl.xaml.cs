@@ -20,9 +20,9 @@ namespace BlueFoxTests_Oracle.UserControls
         private readonly Questions_For_Tests _questionInDb = new Questions_For_Tests();
 
         private readonly Test _testInBd = new Test();
-        private readonly List<Theme> _themes = new List<Theme>();
+        private List<Theme> _themes = new List<Theme>();
 
-        private readonly Theme _themeInBd = new Theme();
+        private Theme _themeInBd = new Theme();
         private bool _canSaveTest;
         private List<Answers_For_Tests> _listAnswerInDb;
         private List<Questions_For_Tests> _questions = new List<Questions_For_Tests>();
@@ -78,7 +78,7 @@ namespace BlueFoxTests_Oracle.UserControls
                 {
                     var newTheme = new Theme {Theme_Name = txbTheme.Text};
                     DB.AddTheme(newTheme);
-                    _themes.Add(newTheme);
+                    _themes = DB.GetThemes();
                     listThemes.Items.Add(new ListViewItem {Content = newTheme.Theme_Name});
                     MainWindow.Snackbar.MessageQueue.Enqueue("Added!");
                 }
@@ -338,14 +338,7 @@ namespace BlueFoxTests_Oracle.UserControls
             {
                 if (!IsNullOrEmpty(txbTest.Text))
                 {
-                    var flagTest = false;
-
-                    foreach (var test in DB.GetTestsByThemeId(_selectedTheme.Theme_Id))
-                        if (txbTest.Text == test.Test_Name)
-                        {
-                            flagTest = true;
-                            break;
-                        }
+                    var flagTest = _tests.Any(test => string.Equals(txbTest.Text, test.Test_Name, StringComparison.CurrentCultureIgnoreCase));
 
                     if (!flagTest)
                     {
@@ -363,7 +356,7 @@ namespace BlueFoxTests_Oracle.UserControls
                     }
                     else
                     {
-                        MainWindow.ShowDialog("This test already exists!");
+                        MainWindow.ShowDialog("Test already exists!");
                     }
                 }
                 else
@@ -382,7 +375,7 @@ namespace BlueFoxTests_Oracle.UserControls
         {
             try
             {
-                if (_themeInBd != null && _testInBd != null && _questionInDb != null && _listAnswerInDb != null)
+                if (_selectedTheme != null && _testInBd != null && _questionInDb != null && _listAnswerInDb != null)
                 {
                     if (IsNullOrEmpty(_themeInBd.Theme_Name) || IsNullOrEmpty(_testInBd.Test_Name))
                     {
