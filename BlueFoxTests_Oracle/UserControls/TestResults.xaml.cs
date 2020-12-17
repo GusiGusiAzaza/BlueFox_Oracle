@@ -15,13 +15,15 @@ namespace BlueFoxTests_Oracle.UserControls
     /// </summary>
     public partial class TestResults : UserControl
     {
-        private Test_Progress _results;
+        private Test_Result _result;
         private readonly Test _test;
+        public static StackPanel ResultPanel;
 
-        public TestResults(Test_Progress results, Test test)
+        public TestResults(Test_Result result, Test test)
         {
             InitializeComponent();
-            _results = results;
+            ResultPanel = ResultsPanel;
+            _result = result;
             _test = test;
             LoadResultsContent();
         }
@@ -31,12 +33,29 @@ namespace BlueFoxTests_Oracle.UserControls
             try
             {
                 QuestionsGrid.Children.Clear();
+                TestSolution._resultsGrid.Children.Clear();
+                var timeSpent = "00:00:00";
+                if (_result.End_Date != null)
+                {
+                    timeSpent = _result.End_Date.Value.Subtract(_result.Start_Date).ToString(@"hh\:mm\:ss");
+                }
+
+                tbTestName.Text = $"\"{_test.Test_Name}\"";
+                tbRightAnsweredCounter.Text = $"Right: {_result.Right_Answers_Count}/{_result.Questions_Count}";
+                tbScore.Text = $"Score: {_result.Score}%";
+                tbPassScore.Text = $"Pass score: {_test.Passing_Score}%";
+                tbPassed.Text = _result.Is_Passed ? "Passed: Yes" : "Passed: No";
+                tbTimeSpent.Text = $"Time: {timeSpent}";
+                tbStartDate.Text = $"Started on: {_result.Start_Date}";
+                foreach (TextBlock child in ResStats.Children)
+                {
+                    child.Foreground = _result.Is_Passed ? Brushes.GreenYellow : Brushes.Red;
+                }
                 foreach (var question in _test.Questions_For_Tests)
                 {
-                    using var db = new BlueFoxContext();
-
-                    var answers = db.Questions_For_Tests.FirstOrDefault(q => q.Question_Id == question.Question_Id)?.Answers_For_Tests.ToList();
-                    MainWindow.Shuffle(answers);
+                    var answers = question.Answers_For_Tests;
+                    var userAnswer = _result.UserAnswers.FirstOrDefault(a => a.Question_Id == question.Question_Id);
+                    TestSolution.Shuffle(answers);
                     var border = new Border
                     {
                         CornerRadius = new CornerRadius(20),
@@ -71,14 +90,23 @@ namespace BlueFoxTests_Oracle.UserControls
                     for (int i = 0; i < aList.Count; i++)
                     {
                         aList[i].Content = answers[i].Answer;
+                        if(userAnswer == null) qBorder.BorderBrush = Brushes.Red;
                         if (answers[i].Is_Right)
                         {
+                            if (userAnswer != null && userAnswer.User_Answer == answers[i].Answer_Id) qBorder.BorderBrush = Brushes.Green; ;
                             aList[i].Background = Brushes.Green;
                             aList[i].IsEnabled = true;
                             aList[i].BorderBrush = Brushes.GreenYellow;
                             aList[i].IsChecked = true;
                         }
-                        else aList[i].Background = Brushes.Red;
+                        else if(userAnswer != null && userAnswer.User_Answer == answers[i].Answer_Id)
+                        {
+                            qBorder.BorderBrush = Brushes.Red;
+                            aList[i].Background = Brushes.DarkRed;
+                            aList[i].IsEnabled = true;
+                            aList[i].BorderBrush = Brushes.Red;
+                            aList[i].IsChecked = true;
+                        }
                     }
 
                     foreach (var a in aList)

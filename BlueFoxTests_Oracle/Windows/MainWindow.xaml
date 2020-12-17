@@ -6,7 +6,7 @@
                       xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
                       xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
                       xmlns:dockablz="clr-namespace:Dragablz.Dockablz;assembly=Dragablz"
-                      xmlns:wpf="http://materialdesigninxaml.net/winfx/xaml/themes"
+                      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                       mc:Ignorable="d"
                       xmlns:userControls="clr-namespace:BlueFoxTests_Oracle.UserControls"
                       xmlns:vMs="clr-namespace:BlueFoxTests_Oracle.VMs"
@@ -19,7 +19,7 @@
                       TextElement.FontSize="18"
                       TextOptions.TextFormattingMode="Ideal" TextOptions.TextRenderingMode="Auto"
                       FontFamily="../../Resources/Decorations/Fonts/#Mark" FontWeight="Normal" BorderBrush="DeepSkyBlue"
-                      Icon="../../Resources/Icons/64x64Logo.png"
+                      Icon="./../Resources/Icons/64x64Logo.png"
                       WindowStartupLocation="CenterScreen" UseNoneWindowStyle="True"
                       Title="Blue Fox" Width="1600" Height="900" MinWidth="1200" MinHeight="700">
 
@@ -36,7 +36,7 @@
                         CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed_Minimize" />
     </Window.CommandBindings>
 
-    <Grid>
+    <Grid Name="MainGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="30" />
             <RowDefinition />
@@ -52,14 +52,25 @@
             <ColumnDefinition />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-
+        <materialDesign:DialogHost x:Name="DialogHost" Grid.Row="0" Grid.Column="0" Grid.RowSpan="6" Grid.ColumnSpan="5" CloseOnClickAway="False" DialogTheme="Inherit" >
+            <materialDesign:DialogHost.DialogContent>
+                <StackPanel>
+                    <TextBlock FontSize="20" Margin="20 10" Name="DialogTxt">
+                        Information successfully changed
+                    </TextBlock>
+                    <Button Style="{StaticResource MaterialDesignFlatButton}" IsCancel="True"
+                            Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                            HorizontalAlignment="Center" Margin="10 10" Click="EnableGrid">OK</Button>
+                </StackPanel>
+            </materialDesign:DialogHost.DialogContent>
+        </materialDesign:DialogHost>
         <Border Grid.Row="0" Grid.ColumnSpan="5" BorderThickness="0 0 0 1" BorderBrush="#00A8E0">
             <!--Custom Window-->
             <Grid Height="30" Background="DeepSkyBlue">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                     <Image Source="../Resources/Icons/BlueFoxLogoNoLabel.png" Margin="2" HorizontalAlignment="Left"
                            VerticalAlignment="Center" />
-                    <TextBlock Text="Blue fox tests" Margin="5 3 0 0" FontSize="15" Foreground="Black" />
+                    <TextBlock Text="Blue Fox Tests" Margin="5 3 0 0" FontSize="15" Foreground="Black" />
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
@@ -95,100 +106,19 @@
                                          Style="{DynamicResource MaterialDesignTabablzControlStyle}">
                     <TabItem>
                         <TabItem.Header>
-                            <TextBlock Text="HOME" FontWeight="Medium" HorizontalAlignment="Stretch"
-                                       TextAlignment="Center"
-                                       Width="{Binding ElementName=SizingPanel, Path=ActualWidth, Mode=OneWay}" />
-                        </TabItem.Header>
-                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
-                                      CanContentScroll="False">
-                            <userControls:HomeUserControl />
-                        </ScrollViewer>
-                    </TabItem>
-                    <TabItem>
-                        <TabItem.Header>
                             <TextBlock Text="TESTS" FontWeight="Medium" HorizontalAlignment="Stretch"
                                        TextAlignment="Center"
                                        Width="{Binding ElementName=SizingPanel, Path=ActualWidth, Mode=OneWay}" />
                         </TabItem.Header>
 
                         <dragablz:TabablzControl Style="{DynamicResource MaterialDesignTabablzControlStyle}">
-                            <TabItem Header="Themes">
-                                <ScrollViewer VerticalScrollBarVisibility="Auto"
-                                              HorizontalScrollBarVisibility="Disabled" CanContentScroll="False">
-                                    <Grid x:Name="ThemesTab"></Grid>
-                                </ScrollViewer>
-                            </TabItem>
                             <TabItem Header="Tests">
-                                <ScrollViewer VerticalScrollBarVisibility="Auto"
-                                              HorizontalScrollBarVisibility="Disabled" CanContentScroll="False">
-                                    <userControls:TestsUserControl />
-                                </ScrollViewer>
+                                <userControls:TestsUserControl/>
                             </TabItem>
                             <TabItem Header="Solving Test">
                                 <ScrollViewer VerticalScrollBarVisibility="Auto"
                                               HorizontalScrollBarVisibility="Disabled" CanContentScroll="False">
-                                    <Grid>
-                                        <Grid x:Name="SolvingTabGrid" Visibility="Collapsed" Width="1000">
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                            </Grid.RowDefinitions>
-
-                                            <TextBlock x:Name="TestName" Text="##Test Name##" Foreground="White"
-                                                   Height="50" VerticalAlignment="Center"
-                                                   Background="#7A7A7A" FontSize="30" Margin="1" Padding="20 4" />
-                                            <wpf:PackIcon x:Name="AnswerCorrectIcon" Foreground="Transparent" Kind="Adjust" Grid.Row="0" Width="25" Height="25" HorizontalAlignment="Right" VerticalAlignment="Center"
-                                                      Margin="20 0"></wpf:PackIcon>
-                                            <Border x:Name="QuestionAreaPanel" Grid.Row="1" CornerRadius="20" Margin="10 0">
-                                                <Border.Background>
-                                                    <SolidColorBrush Opacity="0.3" />
-                                                </Border.Background>
-                                                <StackPanel>
-                                                    <TextBlock Margin="20 50 20 15" FontSize="25"
-                                                           VerticalAlignment="Bottom" HorizontalAlignment="Center"
-                                                           FontWeight="Bold">Question</TextBlock>
-                                                    <Grid>
-                                                        <Grid.RowDefinitions>
-                                                            <RowDefinition Height="Auto" />
-                                                            <RowDefinition Height="Auto" />
-                                                        </Grid.RowDefinitions>
-                                                        <Border Grid.Row="0" Margin="60 0" VerticalAlignment="Top"
-                                                            CornerRadius="10" BorderThickness="1"
-                                                            BorderBrush="DeepSkyBlue">
-                                                            <TextBlock x:Name="Question" Margin="5 0 0 0" FontSize="23"
-                                                                   TextWrapping="Wrap" Text="##Question##" />
-                                                        </Border>
-                                                        <StackPanel x:Name="AnswersPanel" Grid.Row="1" Margin="60 25">
-                                                            <RadioButton x:Name="Answer1"
-                                                                     Style="{StaticResource MaterialDesignLightRadioButton}"
-                                                                     Margin="5" />
-                                                            <RadioButton x:Name="Answer2"
-                                                                     Style="{StaticResource MaterialDesignLightRadioButton}"
-                                                                     Margin="5" />
-                                                            <RadioButton x:Name="Answer3"
-                                                                     Style="{StaticResource MaterialDesignLightRadioButton}"
-                                                                     Margin="5" />
-                                                            <RadioButton x:Name="Answer4"
-                                                                     Style="{StaticResource MaterialDesignLightRadioButton}"
-                                                                     Margin="5" />
-                                                        </StackPanel>
-                                                    </Grid>
-                                                </StackPanel>
-                                            </Border>
-
-                                            <Grid Grid.Row="2" Height="100">
-                                                <Button x:Name="NextQuestionButton" Content="Next Question" Height="50"
-                                                    HorizontalAlignment="Center"
-                                                    FontSize="30"
-                                                    Style="{StaticResource MaterialDesignFlatButton}"
-                                                    Click="NextQuestionButton_Click" />
-                                            </Grid>
-                                        </Grid>
-                                        <Grid x:Name="ResultsGrid" Visibility="Collapsed">
-
-                                        </Grid>
-                                    </Grid>
+                                    <userControls:TestSolution />
                                 </ScrollViewer>
                             </TabItem>
                         </dragablz:TabablzControl>
@@ -201,7 +131,7 @@
                         </TabItem.Header>
                         <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
                                       CanContentScroll="False">
-                            <userControls:UserProfileUserControl />
+                            <userControls:UserProfile />
                         </ScrollViewer>
                     </TabItem>
                     <TabItem x:Name="AdminTabItem">
@@ -218,33 +148,28 @@
                                     <userControls:AdminCreateTestControl />
                                 </ScrollViewer>
                             </TabItem>
-
-                            <TabItem Header="New Home Page" >
-                                <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Margin="30" Width="1000">
-                                    <TextBox x:Name="url" Style="{DynamicResource MaterialDesignFloatingHintTextBox}" wpf:HintAssist.Hint="Site URL" FontSize="25"></TextBox>
-                                    <Button Style="{DynamicResource MaterialDesignFlatMidBgButton}" Height="50" Content="Add Site" HorizontalAlignment="Right" 
-                                            Click="AddUri_Click"></Button>
-                                </Grid>
-                            </TabItem>
-
                         </dragablz:TabablzControl>
                     </TabItem>
                 </dragablz:TabablzControl>
             </dockablz:Layout>
         </Grid>
 
+        <materialDesign:Snackbar MessageQueue="{materialDesign:MessageQueue}" x:Name="MainSnackbar"
+                      Grid.Row="5" Grid.Column="0" VerticalAlignment="Bottom" Margin="0 0 10 0"/>
+
         <Button x:Name="SettingsButton" Grid.Row="5" Grid.Column="4" Width="40" Height="40"
                 Style="{StaticResource MaterialDesignFloatingActionDarkButton}" Background="Transparent"
                 HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="5 5" BorderBrush="Transparent"
                 Panel.ZIndex="50" Click="SettingsButton_Click">
-            <wpf:PackIcon Kind="CogOutline" Height="24" Width="24" Foreground="{DynamicResource MaterialDesignBody}" />
+            <materialDesign:PackIcon Kind="CogOutline" Height="24" Width="24" Foreground="{DynamicResource MaterialDesignBody}" />
         </Button>
         <!--Bottom Settings Icon Button-->
 
-        <controls:Flyout x:Name="LeftFlyout" Position="Right" Header="Settings"
-                         wpf:FlyoutAssist.HeaderColorMode="PrimaryDark" Panel.ZIndex="100"
-                         Grid.Row="1" Grid.Column="4" Grid.RowSpan="5">
+        <controls:Flyout x:Name="LeftFlyout" Position="Right" Header="Settings" Width="350px"
+                         materialDesign:FlyoutAssist.HeaderColorMode="PrimaryDark" Panel.ZIndex="1000"
+                         Grid.Row="1" Grid.Column="3" Grid.RowSpan="5" Grid.ColumnSpan="2">
             <Grid Margin="24">
+                <userControls:UserStatsControl/>
                 <userControls:MainWindowFlyout HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0 60">
                     <userControls:MainWindowFlyout.DataContext>
                         <vMs:MainWindowFlyoutViewModel />

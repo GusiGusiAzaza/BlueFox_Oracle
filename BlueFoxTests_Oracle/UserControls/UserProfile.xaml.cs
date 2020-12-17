@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using BlueFoxTests_Oracle.Components;
@@ -11,7 +10,7 @@ using static System.String;
 namespace BlueFoxTests_Oracle.UserControls
 {
     /// <summary>
-    /// Логика взаимодействия для UserProfileUserControl.xaml
+    ///     Логика взаимодействия для UserProfileUserControl.xaml
     /// </summary>
     public partial class UserProfile : UserControl
     {
@@ -25,47 +24,45 @@ namespace BlueFoxTests_Oracle.UserControls
         {
             try
             {
-                using BlueFoxContext db = new BlueFoxContext();
-                var user = db.Users.FirstOrDefault(u => u.User_Id == MainWindow.User.User_Id);
+                string bday = "";
+                if (Birthday.SelectedDate != null) bday = Birthday.SelectedDate.Value.ToShortDateString();
 
-                if (user != null && user.User_Info.Name != Namee.Text) user.User_Info.Name = Namee.Text;
-                if (user != null && user.User_Info.Gender != Gender.Text) user.User_Info.Gender = Gender.Text;
-                if (user != null && user.User_Info.Location != Location.Text) user.User_Info.Location = Location.Text;
-                if (user != null && user.User_Info.Birthday != Birthday.SelectedDate) user.User_Info.Birthday = Birthday.SelectedDate;
-                if (user != null && user.User_Info.Summary != Summary.Text) user.User_Info.Summary = Summary.Text;
-                if (user != null && user.User_Info.Education != Education.Text) user.User_Info.Education = Education.Text;
-                if (user != null && user.User_Info.Work != Work.Text) user.User_Info.Work = Work.Text;
-                db.SaveChanges();
-                MessageBox.Show("Information successfully changed", "Info");
+                var userInfo = new User_Info
+                {
+                    UserId = MainWindow.User.User_Id,
+                    Name = Namee.Text,
+                    Gender = Gender.Text,
+                    Location = Location.Text,
+                    Birthday = bday,
+                    Summary = Summary.Text,
+                    Education = Education.Text,
+                    Work = Work.Text
+                };
+                MainWindow.Snackbar.MessageQueue.Enqueue("Saved!");
+                DB.UpdateUserInfo(userInfo);
             }
             catch (Exception exception)
             {
                 MessageBox.Show(exception.Message, "Error");
                 Logger.Log.Error(exception);
             }
-
         }
 
         private void LoadUserInfo()
         {
             try
             {
-                using BlueFoxContext db = new BlueFoxContext();
-                var user = db.Users.FirstOrDefault(u => u.User_Id == MainWindow.User.User_Id);
-                if (user != null && user.User_Info == null) db.User_Info.Add(new User_Info()
-                {
-                    User_Id = user.User_Id
-                });
-                db.SaveChanges();
-                if (MainWindow.IsAdmin) ProfileIcon.Kind = PackIconKind.AccountCog;
-                if (user != null && !IsNullOrEmpty(user.Username)) Username.Text = user.Username;
-                if (user != null && !IsNullOrEmpty(user.User_Info.Name)) Namee.Text = user.User_Info.Name;
-                if (user != null && !IsNullOrEmpty(user.User_Info.Gender)) Gender.Text = user.User_Info.Gender;
-                if (user != null && !IsNullOrEmpty(user.User_Info.Location)) Location.Text = user.User_Info.Location;
-                if (user?.User_Info.Birthday != null) Birthday.SelectedDate = user.User_Info.Birthday;
-                if (user != null && !IsNullOrEmpty(user.User_Info.Summary)) Summary.Text = user.User_Info.Summary;
-                if (user != null && !IsNullOrEmpty(user.User_Info.Education)) Education.Text = user.User_Info.Education;
-                if (user != null && !IsNullOrEmpty(user.User_Info.Work)) Work.Text = user.User_Info.Work;
+                var userInfo = DB.GetUserInfo(MainWindow.User.User_Id);
+
+                if (MainWindow.AdminId != 0) ProfileIcon.Kind = PackIconKind.AccountCog;
+                Username.Text = MainWindow.User.Username;
+                if (!IsNullOrEmpty(userInfo.Name)) Namee.Text = userInfo.Name;
+                if (!IsNullOrEmpty(userInfo.Gender)) Gender.Text = userInfo.Gender;
+                if (!IsNullOrEmpty(userInfo.Location)) Location.Text = userInfo.Location;
+                if (!IsNullOrEmpty(userInfo.Birthday)) Birthday.SelectedDate = DateTime.Parse(userInfo.Birthday);
+                if (!IsNullOrEmpty(userInfo.Summary)) Summary.Text = userInfo.Summary;
+                if (!IsNullOrEmpty(userInfo.Education)) Education.Text = userInfo.Education;
+                if (!IsNullOrEmpty(userInfo.Work)) Work.Text = userInfo.Work;
             }
             catch (Exception exception)
             {
@@ -73,6 +70,5 @@ namespace BlueFoxTests_Oracle.UserControls
                 Logger.Log.Error(exception);
             }
         }
-
     }
 }

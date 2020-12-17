@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Data;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -20,6 +22,7 @@ namespace BlueFoxTests_Oracle.Windows
         {
             InitializeComponent();
             UsernameTextBox.LostKeyboardFocus += UsernameTextBox_LostKeyboardFocus;
+            DB.Initialize();
         }
 
         private void CommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -71,24 +74,23 @@ namespace BlueFoxTests_Oracle.Windows
                 SignInInvalidUsernameWarning.Visibility = Visibility.Visible;
                 return;
             }
-
             SignInInvalidUsernameWarning.Visibility = Visibility.Collapsed;
 
             try
             {
-                using var db = new BlueFoxContext();
                 MD5 md5 = new MD5CryptoServiceProvider();
                 var hash = Convert
                     .ToBase64String(md5.ComputeHash(Encoding.UTF8.GetBytes(PasswordBox.Password)))
                     .Substring(0, 15);
-                var user = db.Users.FirstOrDefault(u =>
-                    u.Username == UsernameTextBox.Text && u.Password_Hash == hash);
+
+                User user = DB.CheckUserLogin(UsernameTextBox.Text, hash);
+
                 if (user != null)
                 {
+                    var isAdmin = DB.IsAdmin(user.User_Id);
                     LoginWarningLabel.Visibility = Visibility.Collapsed;
                     LoginWarningIcon.Visibility = Visibility.Collapsed;
-
-                    var isAdmin = db.Admins.FirstOrDefault(admin => admin.User_Id == user.User_Id) != null;
+                    
                     var mainWindow = new MainWindow(user, isAdmin);
                     Logger.Log.Info($"User \"{user.Username}\"(id: {user.User_Id}) successfully logged in");
                     mainWindow.Show();
@@ -104,6 +106,7 @@ namespace BlueFoxTests_Oracle.Windows
             }
             catch (Exception exception)
             {
+                DB.Conn.Close();
                 MessageBox.Show(exception.Message, "Error");
                 Logger.Log.Error(exception);
             }
@@ -115,6 +118,52 @@ namespace BlueFoxTests_Oracle.Windows
             LoginWarningLabel.Text = (string)TryFindResource("login_ForgotPasswordWarning");
             LoginWarningLabel.Visibility = Visibility.Visible;
             LoginWarningIcon.Visibility = Visibility.Visible;
+        }
+
+        private void BdGenerate()
+        {
+            MD5 md5 = new MD5CryptoServiceProvider();
+
+            string name;
+            string password;
+            for (int i = 1; i < 101000; i++)
+            {
+                name = $"User{i}";
+                password = $"User{i}";
+                var hash = Convert
+                    .ToBase64String(md5.ComputeHash(Encoding.UTF8.GetBytes(password)))
+                    .Substring(0, 15);
+                DB.AddUser(new User
+                {
+                    Username = name,
+                    Password_Hash = hash
+                });
+            }
+
+            //string th_name;
+            //for (int i = 1; i < 100; i++)
+            //{
+            //    th_name = $"Theme{i}";
+            //    DB.AddTheme(new Models.Theme
+            //    {
+            //        Theme_Name = th_name
+            //    });
+            //}
+
+            //string t_name;
+            //for (int i = 1; i < 100; i++)
+            //{
+            //    t_name = $"Test{i}";
+            //    DB.AddTest(new Test
+            //    {
+            //        Theme_Id = 3,
+            //        Admin_Id = 1,
+            //        Test_Name = t_name,
+            //        Time_Limit_In_Minutes = 10,
+            //        Passing_Score = 50,
+            //        Is_Enabled = true
+            //    });
+            //}
         }
     }
 }

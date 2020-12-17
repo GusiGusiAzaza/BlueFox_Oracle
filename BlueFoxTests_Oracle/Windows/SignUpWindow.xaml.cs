@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -8,6 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using BlueFoxTests_Oracle.Components;
 using BlueFoxTests_Oracle.Models;
+using Oracle.ManagedDataAccess.Client;
 
 namespace BlueFoxTests_Oracle.Windows
 {
@@ -53,18 +55,16 @@ namespace BlueFoxTests_Oracle.Windows
 
         private void UsernameTextBox_LostKeyboardFocus(object sender, RoutedEventArgs e)
         {
-            if (!Regex.IsMatch(UsernameTextBox.Text, "^[a-zA-Z][a-zA-Z0-9]{2,19}$"))
+            try
             {
-                SignUpUserNameWarningTextBlock.Text = (string)TryFindResource("signup_InvalidUsernameWarning");
-                SignUpUserNameWarningTextBlock.Visibility = Visibility.Visible;
-                return;
-            }
+                if (!Regex.IsMatch(UsernameTextBox.Text, "^[a-zA-Z][a-zA-Z0-9]{2,19}$"))
+                {
+                    SignUpUserNameWarningTextBlock.Text = (string)TryFindResource("signup_InvalidUsernameWarning");
+                    SignUpUserNameWarningTextBlock.Visibility = Visibility.Visible;
+                    return;
+                }
 
-            using (BlueFoxContext db = new BlueFoxContext())
-            {
-                if (!db.Users.Any()) return;
-                User user = db.Users.FirstOrDefault(u => u.Username == UsernameTextBox.Text);
-                if (user != null)
+                if (DB.UserExistsByUsername(UsernameTextBox.Text))
                 {
                     SignUpUserNameWarningTextBlock.Text = (string)TryFindResource("signup_UserExistsWarning");
                     SignUpUserNameWarningTextBlock.Visibility = Visibility.Visible;
@@ -73,9 +73,15 @@ namespace BlueFoxTests_Oracle.Windows
                 {
                     SignUpUserNameWarningTextBlock.Visibility = Visibility.Collapsed;
                 }
-            }
 
-            CheckData();
+                CheckData();
+            }
+            catch (Exception exception)
+            {
+                DB.Conn.Close();
+                MessageBox.Show(exception.Message, "Error");
+                Logger.Log.Error(exception);
+            }
         }
 
         private void PasswordBox_LostKeyboardFocus(object sender, RoutedEventArgs e)
@@ -104,9 +110,10 @@ namespace BlueFoxTests_Oracle.Windows
 
         private async void RegisterButton_Click(object sender, RoutedEventArgs e)
         {
-            using BlueFoxContext db = new BlueFoxContext();
             try
             {
+                using var conn = new OracleConnection(Config.AdminConnectionString);
+                await conn.OpenAsync();
                 MD5 md5 = new MD5CryptoServiceProvider();
                 User newUser = new User
                 {
@@ -114,8 +121,10 @@ namespace BlueFoxTests_Oracle.Windows
                     Password_Hash = Convert.ToBase64String(md5.ComputeHash(Encoding.UTF8.GetBytes(PasswordBox.Password)))
                         .Substring(0, 15)
                 };
-                db.Users.Add(newUser);
-                await db.SaveChangesAsync();
+
+                DB.AddUser(newUser);
+                //DB.InitUserInfoAndStats(DB.GetUserByUsername(newUser.Username).User_Id);
+
                 Logger.Log.Info($"Successfully registered new user \"{newUser.Username}\"(id: {newUser.User_Id}) to database");
 
                 LoginWindow loginWindow = new LoginWindow
@@ -132,6 +141,7 @@ namespace BlueFoxTests_Oracle.Windows
             }
             catch (Exception exception)
             {
+                DB.Conn.Close();
                 MessageBox.Show(exception.Message, "Error");
                 Logger.Log.Error(exception);
             }

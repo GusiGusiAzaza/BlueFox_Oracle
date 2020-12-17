@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:wpf="http://materialdesigninxaml.net/winfx/xaml/themes"
-             mc:Ignorable="d"
+             mc:Ignorable="d"              
              FontFamily="../Resources/Decorations/Fonts/#Mark" FontWeight="Normal"
              Height="Auto" Width="1000">
     <Grid>
@@ -22,7 +22,6 @@
         <TextBlock x:Name="Username" Text="##Noname##" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
                    Style="{DynamicResource MaterialDesignHeadline3TextBlock}"
                    HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="DeepSkyBlue" />
-
         <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="1" BorderBrush="DeepSkyBlue"
                 CornerRadius="10" Margin="5 50 5 5">
             <StackPanel Margin="20 0">
@@ -39,11 +38,7 @@
                         <ComboBoxItem Content="Male"/>
                         <ComboBoxItem Content="Female"/>
                         <ComboBoxItem Content="Uncertain"/>
-                        <ComboBoxItem Content="Gay"/>
-                        <ComboBoxItem Content="Lesbian"/>
-                        <ComboBoxItem Content="Transgender"/>
                         <ComboBoxItem Content="Asexual"/>
-                        <ComboBoxItem Content="Jesus there are so many genders, I'm just a human..."/>
                     </ComboBox>
                 </Grid>
                 <Grid Margin="0 5">
@@ -77,9 +72,9 @@
                              Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                              wpf:HintAssist.Hint="Where do You Work" />
                 </Grid>
-                <Button x:Name="EditNameButton" VerticalAlignment="Bottom" HorizontalAlignment="Right" FontSize="30" Height="50"
-                        Style="{DynamicResource MaterialDesignFlatButton}" Content="Save Changes" Margin="20 50" Click="EditNameButton_Click" />
 
+                <Button x:Name="EditNameButton" VerticalAlignment="Bottom" HorizontalAlignment="Right" FontSize="30" Height="50" 
+                        Style="{DynamicResource MaterialDesignFlatButton}" Content="Save Changes" Margin="20 50" Click="EditNameButton_Click"/>
             </StackPanel>
         </Border>
 
